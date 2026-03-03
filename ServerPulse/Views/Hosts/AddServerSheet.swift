@@ -1,5 +1,6 @@
 import SwiftUI
 import SwiftData
+import AppKit
 
 struct AddServerSheet: View {
     @Environment(\.dismiss) private var dismiss
@@ -14,6 +15,8 @@ struct AddServerSheet: View {
     @State private var authMethod: Server.AuthMethod = .password
     @State private var password = ""
     @State private var showPassword = false
+    @State private var sshKeyData: Data?
+    @State private var sshKeyFileName: String?
     @State private var pollingInterval = "5"
     @State private var dockerEnabled = true
     @State private var isTesting = false
@@ -131,6 +134,32 @@ struct AddServerSheet: View {
                         }
                         .labelsHidden()
                         .pickerStyle(.segmented)
+                    }
+
+                    if authMethod == .key || authMethod == .keyAndPassword {
+                        formDivider()
+
+                        formRow(label: loc["add_server.ssh_key"]) {
+                            HStack(spacing: 8) {
+                                if let fileName = sshKeyFileName {
+                                    Image(systemName: "key.fill")
+                                        .foregroundStyle(theme.statusOnline)
+                                        .font(.system(size: theme.scaled(11)))
+                                    Text(fileName)
+                                        .font(.system(size: theme.scaled(12), design: .monospaced))
+                                        .foregroundStyle(theme.textSecondary)
+                                        .lineLimit(1)
+                                        .truncationMode(.middle)
+                                }
+                                Spacer()
+                                Button(sshKeyData == nil ? loc["add_server.key.select"] : loc["add_server.key.change"]) {
+                                    selectKeyFile()
+                                }
+                                .buttonStyle(.bordered)
+                                .controlSize(.small)
+                                .handCursorOnHover()
+                            }
+                        }
                     }
 
                     if authMethod == .password || authMethod == .keyAndPassword {
@@ -288,14 +317,42 @@ struct AddServerSheet: View {
         )
         server.pollingInterval = Double(pollingInterval) ?? 5
 
+        // Store password or passphrase
         if !password.isEmpty {
             let credId = KeychainService.newCredentialID()
             try? KeychainService.shared.storePassword(password, for: credId)
             server.credentialKeychainID = credId
         }
 
+        // Store SSH private key
+        if let keyData = sshKeyData {
+            let keyId = KeychainService.newCredentialID()
+            try? KeychainService.shared.storeSSHKey(keyData, for: keyId)
+            server.sshKeyKeychainID = keyId
+        }
+
         modelContext.insert(server)
         dismiss()
+    }
+
+    private func selectKeyFile() {
+        let panel = NSOpenPanel()
+        panel.title = "Select SSH Private Key"
+        panel.allowsMultipleSelection = false
+        panel.canChooseDirectories = false
+        panel.canChooseFiles = true
+        panel.showsHiddenFiles = true
+        panel.directoryURL = FileManager.default.homeDirectoryForCurrentUser.appendingPathComponent(".ssh")
+
+        if panel.runModal() == .OK, let url = panel.url {
+            do {
+                let data = try Data(contentsOf: url)
+                sshKeyData = data
+                sshKeyFileName = url.lastPathComponent
+            } catch {
+                testResult = "Failed to read key: \(error.localizedDescription)"
+            }
+        }
     }
 
     private func testConnection() {
@@ -310,10 +367,19 @@ struct AddServerSheet: View {
                 authMethod: authMethod
             )
 
+            let tempId = "test-\(UUID().uuidString)"
+
+            // Store password/passphrase for test
             if !password.isEmpty {
-                let tempId = "test-\(UUID().uuidString)"
                 try? KeychainService.shared.storePassword(password, for: tempId)
                 testServer.credentialKeychainID = tempId
+            }
+
+            // Store SSH key for test
+            if let keyData = sshKeyData {
+                let keyTempId = "test-key-\(UUID().uuidString)"
+                try? KeychainService.shared.storeSSHKey(keyData, for: keyTempId)
+                testServer.sshKeyKeychainID = keyTempId
             }
 
             let testSession = SSHSession(server: testServer)
@@ -331,6 +397,12 @@ struct AddServerSheet: View {
                     testResult = "Failed: \(error.localizedDescription)"
                     isTesting = false
                 }
+            }
+
+            // Cleanup temp keychain items
+            try? KeychainService.shared.deletePassword(id: tempId)
+            if let _ = sshKeyData, let keyId = testServer.sshKeyKeychainID {
+                try? KeychainService.shared.deleteSSHKey(id: keyId)
             }
         }
     }
