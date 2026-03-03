@@ -9,6 +9,7 @@ struct GaugeRing: View {
     var showLabel: Bool = true
     var fontSize: CGFloat = 13
     var animateOnTap: Bool = false
+    @Environment(ThemeManager.self) private var theme
 
     @State private var animatedValue: Double = 0
     @State private var spinAngle: Double = -90
@@ -17,7 +18,7 @@ struct GaugeRing: View {
         ZStack {
             // Background ring
             Circle()
-                .stroke(AppTheme.border, lineWidth: lineWidth)
+                .stroke(theme.border, lineWidth: lineWidth)
 
             // Value ring
             Circle()
@@ -32,7 +33,7 @@ struct GaugeRing: View {
             if showLabel {
                 Text(label)
                     .font(.system(size: fontSize, weight: .semibold, design: .rounded))
-                    .foregroundStyle(AppTheme.textPrimary)
+                    .foregroundStyle(theme.textPrimary)
             }
         }
         .frame(width: size, height: size)

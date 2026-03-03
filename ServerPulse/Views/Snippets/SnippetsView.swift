@@ -4,6 +4,7 @@ import SwiftData
 struct SnippetsView: View {
     @Environment(\.modelContext) private var modelContext
     @Environment(LocalizationManager.self) private var loc
+    @Environment(ThemeManager.self) private var theme
     @Query(sort: \Snippet.name) private var snippets: [Snippet]
     @Query(sort: \SnippetCategory.sortOrder) private var categories: [SnippetCategory]
     @State private var searchText = ""
@@ -31,8 +32,8 @@ struct SnippetsView: View {
             // Header
             HStack {
                 Text(loc["snippets.title"])
-                    .font(.system(size: AppTheme.scaled(24), weight: .bold))
-                    .foregroundStyle(AppTheme.textPrimary)
+                    .font(.system(size: theme.scaled(24), weight: .bold))
+                    .foregroundStyle(theme.textPrimary)
                     .lineLimit(1)
                     .fixedSize(horizontal: true, vertical: false)
 
@@ -61,12 +62,12 @@ struct SnippetsView: View {
                             .fixedSize()
                     }
                     .buttonStyle(.borderedProminent)
-                    .tint(AppTheme.buttonPrimary)
+                    .tint(theme.buttonPrimary)
                     .handCursorOnHover()
                 }
             }
-            .padding(.horizontal, AppTheme.paddingLarge)
-            .padding(.vertical, AppTheme.paddingMedium)
+            .padding(.horizontal, ThemeManager.paddingLarge)
+            .padding(.vertical, ThemeManager.paddingMedium)
 
             if snippets.isEmpty && categories.isEmpty {
                 Spacer()
@@ -81,7 +82,7 @@ struct SnippetsView: View {
                 }
             }
         }
-        .background(AppTheme.background)
+        .background(theme.background)
         .sheet(isPresented: $showAddSheet) {
             AddSnippetSheet(categories: categories)
         }
@@ -93,17 +94,17 @@ struct SnippetsView: View {
     private var emptyState: some View {
         VStack(spacing: 12) {
             Image(systemName: "chevron.left.forwardslash.chevron.right")
-                .font(.system(size: AppTheme.scaled(48)))
-                .foregroundStyle(AppTheme.textTertiary)
+                .font(.system(size: theme.scaled(48)))
+                .foregroundStyle(theme.textTertiary)
             Text(loc["snippets.empty.title"])
-                .font(.system(size: AppTheme.scaled(18), weight: .semibold))
-                .foregroundStyle(AppTheme.textMuted)
+                .font(.system(size: theme.scaled(18), weight: .semibold))
+                .foregroundStyle(theme.textMuted)
             Text(loc["snippets.empty.subtitle"])
-                .font(.system(size: AppTheme.scaled(12)))
-                .foregroundStyle(AppTheme.textTertiary)
+                .font(.system(size: theme.scaled(12)))
+                .foregroundStyle(theme.textTertiary)
             Button(loc["snippets.button.add"]) { showAddSheet = true }
                 .buttonStyle(.borderedProminent)
-                .tint(AppTheme.buttonPrimary)
+                .tint(theme.buttonPrimary)
                 .handCursorOnHover()
         }
     }
@@ -121,7 +122,7 @@ struct SnippetsView: View {
                     } header: {
                         HStack(spacing: 4) {
                             Image(systemName: category.iconName)
-                                .font(.system(size: AppTheme.scaled(10)))
+                                .font(.system(size: theme.scaled(10)))
                             Text(category.name)
                         }
                         .contextMenu {
@@ -167,12 +168,12 @@ struct SnippetsView: View {
     private func snippetRow(_ snippet: Snippet) -> some View {
         VStack(alignment: .leading, spacing: 2) {
             Text(snippet.name)
-                .font(.system(size: AppTheme.scaled(13), weight: .medium))
+                .font(.system(size: theme.scaled(13), weight: .medium))
                 .lineLimit(1)
                 .truncationMode(.tail)
             Text(snippet.command)
-                .font(.system(size: AppTheme.scaled(11), design: .monospaced))
-                .foregroundStyle(AppTheme.textMuted)
+                .font(.system(size: theme.scaled(11), design: .monospaced))
+                .foregroundStyle(theme.textMuted)
                 .lineLimit(1)
         }
         .contextMenu {
@@ -192,10 +193,10 @@ struct SnippetsView: View {
         } else {
             VStack(spacing: 12) {
                 Image(systemName: "chevron.left.forwardslash.chevron.right")
-                    .font(.system(size: AppTheme.scaled(36)))
-                    .foregroundStyle(AppTheme.textTertiary)
+                    .font(.system(size: theme.scaled(36)))
+                    .foregroundStyle(theme.textTertiary)
                 Text(loc["snippets.select"])
-                    .foregroundStyle(AppTheme.textMuted)
+                    .foregroundStyle(theme.textMuted)
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity)
         }
@@ -208,27 +209,28 @@ struct SnippetDetailView: View {
     @Bindable var snippet: Snippet
     let categories: [SnippetCategory]
     @Environment(LocalizationManager.self) private var loc
+    @Environment(ThemeManager.self) private var theme
 
     var body: some View {
         VStack(alignment: .leading, spacing: 16) {
             TextField(loc["snippets.name"], text: $snippet.name)
-                .font(.system(size: AppTheme.scaled(18), weight: .semibold))
+                .font(.system(size: theme.scaled(18), weight: .semibold))
                 .textFieldStyle(.plain)
 
             Divider()
 
             VStack(alignment: .leading, spacing: 6) {
                 Text(loc["snippets.command"])
-                    .font(.system(size: AppTheme.scaled(12), weight: .semibold))
-                    .foregroundStyle(AppTheme.textTertiary)
+                    .font(.system(size: theme.scaled(12), weight: .semibold))
+                    .foregroundStyle(theme.textTertiary)
                     .textCase(.uppercase)
 
                 TextEditor(text: $snippet.command)
-                    .font(.system(size: AppTheme.scaled(13), design: .monospaced))
+                    .font(.system(size: theme.scaled(13), design: .monospaced))
                     .scrollContentBackground(.hidden)
                     .padding(8)
-                    .background(AppTheme.surfaceSecondary)
-                    .clipShape(RoundedRectangle(cornerRadius: AppTheme.cornerRadiusSmall))
+                    .background(theme.surfaceSecondary)
+                    .clipShape(RoundedRectangle(cornerRadius: ThemeManager.cornerRadiusSmall))
                     .frame(minHeight: 100, maxHeight: 200)
             }
 
@@ -246,7 +248,7 @@ struct SnippetDetailView: View {
 
             Spacer()
         }
-        .padding(AppTheme.paddingLarge)
+        .padding(ThemeManager.paddingLarge)
         .onChange(of: snippet.name) { _, _ in snippet.updatedAt = Date() }
         .onChange(of: snippet.command) { _, _ in snippet.updatedAt = Date() }
     }
@@ -258,6 +260,7 @@ struct AddSnippetSheet: View {
     @Environment(\.modelContext) private var modelContext
     @Environment(\.dismiss) private var dismiss
     @Environment(LocalizationManager.self) private var loc
+    @Environment(ThemeManager.self) private var theme
     let categories: [SnippetCategory]
 
     @State private var name = ""
@@ -304,7 +307,7 @@ struct AddSnippetSheet: View {
                     dismiss()
                 }
                 .buttonStyle(.borderedProminent)
-                .tint(AppTheme.buttonPrimary)
+                .tint(theme.buttonPrimary)
                 .disabled(name.isEmpty || command.isEmpty)
                 .handCursorOnHover()
             }
@@ -321,6 +324,7 @@ struct AddCategorySheet: View {
     @Environment(\.modelContext) private var modelContext
     @Environment(\.dismiss) private var dismiss
     @Environment(LocalizationManager.self) private var loc
+    @Environment(ThemeManager.self) private var theme
 
     @State private var name = ""
     @State private var selectedIcon = "terminal"
@@ -366,7 +370,7 @@ struct AddCategorySheet: View {
                     dismiss()
                 }
                 .buttonStyle(.borderedProminent)
-                .tint(AppTheme.buttonPrimary)
+                .tint(theme.buttonPrimary)
                 .disabled(name.isEmpty)
                 .handCursorOnHover()
             }

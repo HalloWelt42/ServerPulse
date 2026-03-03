@@ -2,6 +2,7 @@ import SwiftUI
 
 struct SettingsView: View {
     @Environment(LocalizationManager.self) private var loc
+    @Environment(ThemeManager.self) private var theme
     @AppStorage("defaultPollingInterval") private var defaultPollingInterval: Double = 5
     @AppStorage("defaultConnectionTimeout") private var defaultConnectionTimeout: Double = 10
     @AppStorage("defaultKeepAliveInterval") private var defaultKeepAliveInterval: Double = 30
@@ -42,6 +43,20 @@ struct SettingsView: View {
 
             // MARK: - Appearance
             Section(loc["settings.section.appearance"]) {
+                HStack {
+                    Text(loc["settings.theme"])
+                    Spacer()
+                    Picker("", selection: Binding(
+                        get: { theme.selectedThemeId },
+                        set: { theme.selectedThemeId = $0 }
+                    )) {
+                        ForEach(theme.availableThemes) { preset in
+                            Text(preset.displayName).tag(preset.id)
+                        }
+                    }
+                    .frame(width: 180)
+                }
+
                 HStack {
                     Text(loc["settings.ui_scale"])
                     Spacer()
@@ -85,7 +100,7 @@ struct SettingsView: View {
 
                         Text("\(Int(terminalFontSize)) pt")
                             .font(.system(size: 13, weight: .bold, design: .monospaced))
-                            .foregroundStyle(AppTheme.textPrimary)
+                            .foregroundStyle(theme.textPrimary)
                             .frame(width: 50)
 
                         Button {
@@ -105,7 +120,7 @@ struct SettingsView: View {
                 VStack(alignment: .leading, spacing: 4) {
                     Text(loc["settings.terminal.preview"])
                         .font(.system(size: 11))
-                        .foregroundStyle(AppTheme.textTertiary)
+                        .foregroundStyle(theme.textTertiary)
                     Text("user@server:~ $ ls -la /var/log")
                         .font(.custom(resolvedFontName, size: terminalFontSize))
                         .fontWeight(terminalFontBold ? .bold : .regular)
@@ -160,8 +175,13 @@ struct SettingsView: View {
                     Text("ServerPulse")
                         .fontWeight(.semibold)
                     Spacer()
-                    Text("v1.0.0")
+                    Text("v\(AppVersion.current)")
                         .foregroundStyle(.secondary)
+                }
+                HStack {
+                    Text(AppVersion.copyright)
+                        .font(.system(size: 12))
+                        .foregroundStyle(theme.textTertiary)
                 }
             }
         }

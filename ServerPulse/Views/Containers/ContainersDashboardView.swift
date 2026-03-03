@@ -5,6 +5,7 @@ struct ContainersDashboardView: View {
     @Environment(SSHConnectionManager.self) private var connectionManager
     @Environment(DockerService.self) private var dockerService
     @Environment(LocalizationManager.self) private var loc
+    @Environment(ThemeManager.self) private var theme
     @Query(sort: \Server.sortOrder) private var servers: [Server]
     @State private var searchText = ""
     @State private var statusFilter: StatusFilter = .all
@@ -21,8 +22,8 @@ struct ContainersDashboardView: View {
             // Header
             HStack {
                 Text(loc["containers.title"])
-                    .font(.system(size: AppTheme.scaled(24), weight: .bold))
-                    .foregroundStyle(AppTheme.textPrimary)
+                    .font(.system(size: theme.scaled(24), weight: .bold))
+                    .foregroundStyle(theme.textPrimary)
                     .lineLimit(1)
                     .fixedSize(horizontal: true, vertical: false)
 
@@ -38,15 +39,15 @@ struct ContainersDashboardView: View {
                             statusFilter = filter
                         }
                         .buttonStyle(.bordered)
-                        .tint(statusFilter == filter ? AppTheme.buttonPrimary : .gray)
+                        .tint(statusFilter == filter ? theme.buttonPrimary : .gray)
                         .lineLimit(1)
                         .fixedSize(horizontal: true, vertical: false)
                         .handCursorOnHover()
                     }
                 }
             }
-            .padding(.horizontal, AppTheme.paddingLarge)
-            .padding(.vertical, AppTheme.paddingMedium)
+            .padding(.horizontal, ThemeManager.paddingLarge)
+            .padding(.vertical, ThemeManager.paddingMedium)
 
             // Container list
             ScrollView {
@@ -58,27 +59,27 @@ struct ContainersDashboardView: View {
                         }
                     }
                 }
-                .padding(.horizontal, AppTheme.paddingLarge)
-                .padding(.bottom, AppTheme.paddingLarge)
+                .padding(.horizontal, ThemeManager.paddingLarge)
+                .padding(.bottom, ThemeManager.paddingLarge)
             }
 
             if connectedServers.isEmpty {
                 Spacer()
                 VStack(spacing: 12) {
                     Image(systemName: "shippingbox.fill")
-                        .font(.system(size: AppTheme.scaled(48)))
-                        .foregroundStyle(AppTheme.textTertiary)
+                        .font(.system(size: theme.scaled(48)))
+                        .foregroundStyle(theme.textTertiary)
                     Text(loc["containers.empty.title"])
-                        .font(.system(size: AppTheme.scaled(18), weight: .semibold))
-                        .foregroundStyle(AppTheme.textMuted)
+                        .font(.system(size: theme.scaled(18), weight: .semibold))
+                        .foregroundStyle(theme.textMuted)
                     Text(loc["containers.empty.subtitle"])
-                        .font(.system(size: AppTheme.scaled(13)))
-                        .foregroundStyle(AppTheme.textTertiary)
+                        .font(.system(size: theme.scaled(13)))
+                        .foregroundStyle(theme.textTertiary)
                 }
                 Spacer()
             }
         }
-        .background(AppTheme.background)
+        .background(theme.background)
         .task {
             await refreshContainers()
         }
@@ -116,8 +117,8 @@ struct ContainersDashboardView: View {
     private func serverSection(server: Server, containers: [DockerContainer]) -> some View {
         VStack(alignment: .leading, spacing: 12) {
             Text(loc.string("containers.server_info", server.name, server.hostname, containers.count))
-                .font(.system(size: AppTheme.scaled(14), weight: .semibold))
-                .foregroundStyle(AppTheme.textMuted)
+                .font(.system(size: theme.scaled(14), weight: .semibold))
+                .foregroundStyle(theme.textMuted)
                 .padding(.bottom, 4)
 
             LazyVGrid(columns: [
@@ -146,6 +147,7 @@ struct ContainerCardView: View {
     @Environment(DockerService.self) private var dockerService
     @Environment(SSHConnectionManager.self) private var connectionManager
     @Environment(LocalizationManager.self) private var loc
+    @Environment(ThemeManager.self) private var theme
     @State private var isHovering = false
 
     var body: some View {
@@ -159,8 +161,8 @@ struct ContainerCardView: View {
                     .shadow(color: statusColor.opacity(container.status.isRunning ? 0.6 : 0), radius: 3)
 
                 Text(container.name)
-                    .font(.system(size: AppTheme.scaled(13), weight: .semibold))
-                    .foregroundStyle(AppTheme.textPrimary)
+                    .font(.system(size: theme.scaled(13), weight: .semibold))
+                    .foregroundStyle(theme.textPrimary)
                     .lineLimit(1)
                     .truncationMode(.tail)
 
@@ -171,8 +173,8 @@ struct ContainerCardView: View {
 
             // Image name
             Text(container.image)
-                .font(.system(size: AppTheme.scaled(10), design: .monospaced))
-                .foregroundStyle(AppTheme.textTertiary)
+                .font(.system(size: theme.scaled(10), design: .monospaced))
+                .foregroundStyle(theme.textTertiary)
                 .lineLimit(1)
                 .truncationMode(.middle)
 
@@ -181,49 +183,49 @@ struct ContainerCardView: View {
                 // CPU gauge
                 GaugeRingSmall(
                     value: (container.metrics?.cpuPercent ?? 0) / 100.0,
-                    color: AppTheme.cpuColor
+                    color: theme.cpuColor
                 )
 
                 // Memory
                 VStack(alignment: .leading, spacing: 2) {
                     Text(loc["containers.memory"])
-                        .font(.system(size: AppTheme.scaled(11), weight: .medium))
-                        .foregroundStyle(AppTheme.textTertiary)
+                        .font(.system(size: theme.scaled(11), weight: .medium))
+                        .foregroundStyle(theme.textTertiary)
                         .lineLimit(1)
                     Text(ByteFormatter.format(container.metrics?.memoryUsageBytes ?? 0))
-                        .font(.system(size: AppTheme.scaled(12), weight: .medium, design: .monospaced))
-                        .foregroundStyle(AppTheme.textSecondary)
+                        .font(.system(size: theme.scaled(12), weight: .medium, design: .monospaced))
+                        .foregroundStyle(theme.textSecondary)
                 }
 
                 // Net I/O
                 VStack(alignment: .leading, spacing: 2) {
                     Text(loc["containers.net_io"])
-                        .font(.system(size: AppTheme.scaled(11), weight: .medium))
-                        .foregroundStyle(AppTheme.textTertiary)
+                        .font(.system(size: theme.scaled(11), weight: .medium))
+                        .foregroundStyle(theme.textTertiary)
                         .lineLimit(1)
                     Text(ByteFormatter.format(container.metrics?.networkRxBytes ?? 0))
-                        .font(.system(size: AppTheme.scaled(12), weight: .medium, design: .monospaced))
-                        .foregroundStyle(AppTheme.textSecondary)
+                        .font(.system(size: theme.scaled(12), weight: .medium, design: .monospaced))
+                        .foregroundStyle(theme.textSecondary)
                 }
 
                 // Block I/O
                 VStack(alignment: .leading, spacing: 2) {
                     Text(loc["containers.block_io"])
-                        .font(.system(size: AppTheme.scaled(11), weight: .medium))
-                        .foregroundStyle(AppTheme.textTertiary)
+                        .font(.system(size: theme.scaled(11), weight: .medium))
+                        .foregroundStyle(theme.textTertiary)
                         .lineLimit(1)
                     Text(ByteFormatter.format(container.metrics?.blockReadBytes ?? 0))
-                        .font(.system(size: AppTheme.scaled(12), weight: .medium, design: .monospaced))
-                        .foregroundStyle(AppTheme.textSecondary)
+                        .font(.system(size: theme.scaled(12), weight: .medium, design: .monospaced))
+                        .foregroundStyle(theme.textSecondary)
                 }
             }
         }
         .padding(14)
-        .background(isHovering ? AppTheme.surfacePrimary.opacity(0.85) : AppTheme.surfacePrimary)
+        .background(isHovering ? theme.surfacePrimary.opacity(0.85) : theme.surfacePrimary)
         .clipShape(RoundedRectangle(cornerRadius: 10))
         .overlay(
             RoundedRectangle(cornerRadius: 10)
-                .stroke(isHovering ? AppTheme.buttonPrimary.opacity(0.4) : AppTheme.border, lineWidth: 1)
+                .stroke(isHovering ? theme.buttonPrimary.opacity(0.4) : theme.border, lineWidth: 1)
         )
         .shadow(color: isHovering ? Color.black.opacity(0.12) : Color.clear, radius: 5, y: 2)
         .animation(.easeInOut(duration: 0.15), value: isHovering)
@@ -237,16 +239,16 @@ struct ContainerCardView: View {
                 ContainerActionButton(
                     icon: "stop.fill",
                     label: loc["containers.action.stop"],
-                    color: AppTheme.buttonSecondary,
-                    hoverColor: AppTheme.buttonSecondaryHover
+                    color: theme.buttonSecondary,
+                    hoverColor: theme.buttonSecondaryHover
                 ) {
                     Task { await performAction { try await dockerService.stopContainer(container.id, on: $0) } }
                 }
                 ContainerActionButton(
                     icon: "arrow.clockwise",
                     label: loc["containers.action.restart"],
-                    color: AppTheme.buttonSecondary,
-                    hoverColor: AppTheme.buttonSecondaryHover
+                    color: theme.buttonSecondary,
+                    hoverColor: theme.buttonSecondaryHover
                 ) {
                     Task { await performAction { try await dockerService.restartContainer(container.id, on: $0) } }
                 }
@@ -254,8 +256,8 @@ struct ContainerCardView: View {
                 ContainerActionButton(
                     icon: "play.fill",
                     label: loc["containers.action.start"],
-                    color: AppTheme.buttonPrimary,
-                    hoverColor: AppTheme.buttonPrimaryHover
+                    color: theme.buttonPrimary,
+                    hoverColor: theme.buttonPrimaryHover
                 ) {
                     Task { await performAction { try await dockerService.startContainer(container.id, on: $0) } }
                 }
@@ -271,9 +273,9 @@ struct ContainerCardView: View {
 
     private var statusColor: Color {
         switch container.status {
-        case .running: return AppTheme.statusOnline
-        case .paused: return AppTheme.statusWarning
-        default: return AppTheme.statusOffline
+        case .running: return theme.statusOnline
+        case .paused: return theme.statusWarning
+        default: return theme.statusOffline
         }
     }
 }
@@ -287,6 +289,7 @@ struct ContainerActionButton: View {
     var hoverColor: Color? = nil
     let action: () -> Void
 
+    @Environment(ThemeManager.self) private var theme
     @State private var isHovering = false
 
     private var resolvedHover: Color { hoverColor ?? color }
@@ -295,13 +298,13 @@ struct ContainerActionButton: View {
         Button(action: action) {
             HStack(spacing: 5) {
                 Image(systemName: icon)
-                    .font(.system(size: AppTheme.scaled(10), weight: .bold))
+                    .font(.system(size: theme.scaled(10), weight: .bold))
                 Text(label)
-                    .font(.system(size: AppTheme.scaled(10), weight: .bold))
+                    .font(.system(size: theme.scaled(10), weight: .bold))
                     .lineLimit(1)
             }
             .fixedSize()
-            .foregroundStyle(isHovering ? .white : AppTheme.textSecondary)
+            .foregroundStyle(isHovering ? .white : theme.textSecondary)
             .padding(.horizontal, 10)
             .padding(.vertical, 6)
             .background(isHovering ? resolvedHover : color.opacity(0.2))

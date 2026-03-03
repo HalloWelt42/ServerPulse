@@ -36,6 +36,7 @@ struct SidebarView: View {
     @Binding var selection: SidebarSection?
     @Environment(TerminalSessionManager.self) private var terminalManager
     @Environment(LocalizationManager.self) private var loc
+    @Environment(ThemeManager.self) private var theme
 
     var body: some View {
         List(selection: $selection) {
@@ -58,11 +59,11 @@ struct SidebarView: View {
                     ForEach(terminalManager.activeSessions) { session in
                         HStack(spacing: 6) {
                             Circle()
-                                .fill(session.isConnected ? AppTheme.statusOnline : AppTheme.statusOffline)
+                                .fill(session.isConnected ? theme.statusOnline : theme.statusOffline)
                                 .frame(width: 6, height: 6)
                             Text(session.title)
-                                .font(.system(size: AppTheme.scaled(12)))
-                                .foregroundStyle(AppTheme.textSecondary)
+                                .font(.system(size: theme.scaled(12)))
+                                .foregroundStyle(theme.textSecondary)
                         }
                     }
                 }
@@ -93,5 +94,12 @@ struct SidebarView: View {
         }
         .listStyle(.sidebar)
         .frame(minWidth: 180)
+        .safeAreaInset(edge: .bottom) {
+            Text(AppVersion.footerString)
+                .font(.system(size: 10))
+                .foregroundStyle(theme.textTertiary)
+                .frame(maxWidth: .infinity)
+                .padding(.vertical, 8)
+        }
     }
 }

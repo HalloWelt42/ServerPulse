@@ -1,6 +1,7 @@
 import SwiftUI
 
 struct GuideView: View {
+    @Environment(ThemeManager.self) private var theme
     @Environment(LocalizationManager.self) private var loc
     @State private var showLicense = true
 
@@ -10,42 +11,42 @@ struct GuideView: View {
                 // App Header
                 VStack(spacing: 12) {
                     Image(systemName: "waveform.path.ecg.rectangle")
-                        .font(.system(size: AppTheme.scaled(48)))
-                        .foregroundStyle(AppTheme.buttonPrimary)
+                        .font(.system(size: theme.scaled(48)))
+                        .foregroundStyle(theme.buttonPrimary)
 
                     Text("ServerPulse")
-                        .font(.system(size: AppTheme.scaled(28), weight: .bold))
-                        .foregroundStyle(AppTheme.textPrimary)
+                        .font(.system(size: theme.scaled(28), weight: .bold))
+                        .foregroundStyle(theme.textPrimary)
 
-                    Text("v1.0.0")
-                        .font(.system(size: AppTheme.scaled(13), weight: .medium, design: .monospaced))
-                        .foregroundStyle(AppTheme.textMuted)
+                    Text("v\(AppVersion.current)")
+                        .font(.system(size: theme.scaled(13), weight: .medium, design: .monospaced))
+                        .foregroundStyle(theme.textMuted)
 
                     Text(loc["guide.tagline"])
-                        .font(.system(size: AppTheme.scaled(15)))
-                        .foregroundStyle(AppTheme.textSecondary)
+                        .font(.system(size: theme.scaled(15)))
+                        .foregroundStyle(theme.textSecondary)
                         .multilineTextAlignment(.center)
                         .frame(maxWidth: 500)
                 }
                 .frame(maxWidth: .infinity)
                 .padding(.top, 24)
 
-                Divider().overlay(AppTheme.border).padding(.horizontal, 24)
+                Divider().overlay(theme.border).padding(.horizontal, 24)
 
                 // Features Section
                 VStack(alignment: .leading, spacing: 16) {
                     sectionHeader(loc["guide.features_title"], icon: "sparkles")
 
-                    featureRow(icon: "server.rack", color: AppTheme.buttonPrimary, title: loc["guide.feature.monitoring"], desc: loc["guide.feature.monitoring_desc"])
-                    featureRow(icon: "terminal.fill", color: AppTheme.statusOnline, title: loc["guide.feature.terminal"], desc: loc["guide.feature.terminal_desc"])
-                    featureRow(icon: "shippingbox.fill", color: AppTheme.statusWarning, title: loc["guide.feature.docker"], desc: loc["guide.feature.docker_desc"])
-                    featureRow(icon: "play.circle.fill", color: AppTheme.cachedColor, title: loc["guide.feature.execute"], desc: loc["guide.feature.execute_desc"])
-                    featureRow(icon: "key.fill", color: AppTheme.textMuted, title: loc["guide.feature.keychain"], desc: loc["guide.feature.keychain_desc"])
-                    featureRow(icon: "globe", color: AppTheme.buttonPrimary, title: loc["guide.feature.languages"], desc: loc["guide.feature.languages_desc"])
+                    featureRow(icon: "server.rack", color: theme.buttonPrimary, title: loc["guide.feature.monitoring"], desc: loc["guide.feature.monitoring_desc"])
+                    featureRow(icon: "terminal.fill", color: theme.statusOnline, title: loc["guide.feature.terminal"], desc: loc["guide.feature.terminal_desc"])
+                    featureRow(icon: "shippingbox.fill", color: theme.statusWarning, title: loc["guide.feature.docker"], desc: loc["guide.feature.docker_desc"])
+                    featureRow(icon: "play.circle.fill", color: theme.cachedColor, title: loc["guide.feature.execute"], desc: loc["guide.feature.execute_desc"])
+                    featureRow(icon: "key.fill", color: theme.textMuted, title: loc["guide.feature.keychain"], desc: loc["guide.feature.keychain_desc"])
+                    featureRow(icon: "globe", color: theme.buttonPrimary, title: loc["guide.feature.languages"], desc: loc["guide.feature.languages_desc"])
                 }
                 .padding(.horizontal, 32)
 
-                Divider().overlay(AppTheme.border).padding(.horizontal, 24)
+                Divider().overlay(theme.border).padding(.horizontal, 24)
 
                 // Privacy & Security
                 VStack(alignment: .leading, spacing: 16) {
@@ -59,7 +60,7 @@ struct GuideView: View {
                 }
                 .padding(.horizontal, 32)
 
-                Divider().overlay(AppTheme.border).padding(.horizontal, 24)
+                Divider().overlay(theme.border).padding(.horizontal, 24)
 
                 // License Section
                 VStack(alignment: .leading, spacing: 12) {
@@ -70,15 +71,15 @@ struct GuideView: View {
                     } label: {
                         HStack(spacing: 8) {
                             Image(systemName: "doc.text.fill")
-                                .font(.system(size: AppTheme.scaled(14)))
-                                .foregroundStyle(AppTheme.buttonPrimary)
+                                .font(.system(size: theme.scaled(14)))
+                                .foregroundStyle(theme.buttonPrimary)
                             Text(loc["guide.license_title"])
-                                .font(.system(size: AppTheme.scaled(16), weight: .semibold))
-                                .foregroundStyle(AppTheme.textPrimary)
+                                .font(.system(size: theme.scaled(16), weight: .semibold))
+                                .foregroundStyle(theme.textPrimary)
                             Spacer()
                             Image(systemName: showLicense ? "chevron.up" : "chevron.down")
-                                .font(.system(size: AppTheme.scaled(12), weight: .semibold))
-                                .foregroundStyle(AppTheme.textMuted)
+                                .font(.system(size: theme.scaled(12), weight: .semibold))
+                                .foregroundStyle(theme.textMuted)
                         }
                     }
                     .buttonStyle(.plain)
@@ -94,7 +95,7 @@ struct GuideView: View {
                 Spacer().frame(height: 32)
             }
         }
-        .background(AppTheme.background)
+        .background(theme.background)
     }
 
     // MARK: - Components
@@ -102,18 +103,18 @@ struct GuideView: View {
     private func sectionHeader(_ title: String, icon: String) -> some View {
         HStack(spacing: 8) {
             Image(systemName: icon)
-                .font(.system(size: AppTheme.scaled(16)))
-                .foregroundStyle(AppTheme.buttonPrimary)
+                .font(.system(size: theme.scaled(16)))
+                .foregroundStyle(theme.buttonPrimary)
             Text(title)
-                .font(.system(size: AppTheme.scaled(18), weight: .bold))
-                .foregroundStyle(AppTheme.textPrimary)
+                .font(.system(size: theme.scaled(18), weight: .bold))
+                .foregroundStyle(theme.textPrimary)
         }
     }
 
     private func featureRow(icon: String, color: Color, title: String, desc: String) -> some View {
         HStack(alignment: .top, spacing: 14) {
             Image(systemName: icon)
-                .font(.system(size: AppTheme.scaled(18)))
+                .font(.system(size: theme.scaled(18)))
                 .foregroundStyle(color)
                 .frame(width: 32, height: 32)
                 .background(color.opacity(0.1))
@@ -121,11 +122,11 @@ struct GuideView: View {
 
             VStack(alignment: .leading, spacing: 3) {
                 Text(title)
-                    .font(.system(size: AppTheme.scaled(14), weight: .semibold))
-                    .foregroundStyle(AppTheme.textPrimary)
+                    .font(.system(size: theme.scaled(14), weight: .semibold))
+                    .foregroundStyle(theme.textPrimary)
                 Text(desc)
-                    .font(.system(size: AppTheme.scaled(12)))
-                    .foregroundStyle(AppTheme.textSecondary)
+                    .font(.system(size: theme.scaled(12)))
+                    .foregroundStyle(theme.textSecondary)
                     .fixedSize(horizontal: false, vertical: true)
             }
         }
@@ -134,12 +135,12 @@ struct GuideView: View {
     private func privacyRow(icon: String, text: String) -> some View {
         HStack(spacing: 10) {
             Image(systemName: icon)
-                .font(.system(size: AppTheme.scaled(13)))
-                .foregroundStyle(AppTheme.statusOnline)
+                .font(.system(size: theme.scaled(13)))
+                .foregroundStyle(theme.statusOnline)
                 .frame(width: 20)
             Text(text)
-                .font(.system(size: AppTheme.scaled(13)))
-                .foregroundStyle(AppTheme.textSecondary)
+                .font(.system(size: theme.scaled(13)))
+                .foregroundStyle(theme.textSecondary)
         }
     }
 
@@ -148,8 +149,8 @@ struct GuideView: View {
     private var licenseText: some View {
         VStack(alignment: .leading, spacing: 12) {
             Text("ServerPulse Non-Commercial License v1.0")
-                .font(.system(size: AppTheme.scaled(14), weight: .bold))
-                .foregroundStyle(AppTheme.textPrimary)
+                .font(.system(size: theme.scaled(14), weight: .bold))
+                .foregroundStyle(theme.textPrimary)
 
             Text("""
 Based on Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International (CC BY-NC-ND 4.0)
@@ -185,17 +186,17 @@ This license is effective until terminated. It will terminate automatically if y
 For the full CC BY-NC-ND 4.0 license text, visit:
 https://creativecommons.org/licenses/by-nc-nd/4.0/legalcode
 """)
-                .font(.system(size: AppTheme.scaled(11)))
-                .foregroundStyle(AppTheme.textSecondary)
+                .font(.system(size: theme.scaled(11)))
+                .foregroundStyle(theme.textSecondary)
                 .textSelection(.enabled)
                 .fixedSize(horizontal: false, vertical: true)
         }
         .padding(16)
-        .background(AppTheme.surfacePrimary)
+        .background(theme.surfacePrimary)
         .clipShape(RoundedRectangle(cornerRadius: 8))
         .overlay(
             RoundedRectangle(cornerRadius: 8)
-                .stroke(AppTheme.border, lineWidth: 1)
+                .stroke(theme.border, lineWidth: 1)
         )
     }
 }

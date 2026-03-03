@@ -2,6 +2,7 @@ import SwiftUI
 import SwiftData
 
 struct KeychainView: View {
+    @Environment(ThemeManager.self) private var theme
     @Environment(LocalizationManager.self) private var loc
     @Query(sort: \Server.name) private var servers: [Server]
     @State private var selectedServer: Server?
@@ -13,27 +14,27 @@ struct KeychainView: View {
             // Header
             HStack {
                 Text(loc["keychain.title"])
-                    .font(.system(size: AppTheme.scaled(24), weight: .bold))
-                    .foregroundStyle(AppTheme.textPrimary)
+                    .font(.system(size: theme.scaled(24), weight: .bold))
+                    .foregroundStyle(theme.textPrimary)
                     .lineLimit(1)
                     .fixedSize(horizontal: true, vertical: false)
                 Spacer()
             }
-            .padding(.horizontal, AppTheme.paddingLarge)
-            .padding(.vertical, AppTheme.paddingMedium)
+            .padding(.horizontal, ThemeManager.paddingLarge)
+            .padding(.vertical, ThemeManager.paddingMedium)
 
             if servers.isEmpty {
                 Spacer()
                 VStack(spacing: 12) {
                     Image(systemName: "key.fill")
-                        .font(.system(size: AppTheme.scaled(48)))
-                        .foregroundStyle(AppTheme.textTertiary)
+                        .font(.system(size: theme.scaled(48)))
+                        .foregroundStyle(theme.textTertiary)
                     Text(loc["keychain.empty.title"])
-                        .font(.system(size: AppTheme.scaled(18), weight: .semibold))
-                        .foregroundStyle(AppTheme.textMuted)
+                        .font(.system(size: theme.scaled(18), weight: .semibold))
+                        .foregroundStyle(theme.textMuted)
                     Text(loc["keychain.empty.subtitle"])
-                        .font(.system(size: AppTheme.scaled(12)))
-                        .foregroundStyle(AppTheme.textTertiary)
+                        .font(.system(size: theme.scaled(12)))
+                        .foregroundStyle(theme.textTertiary)
                 }
                 Spacer()
             } else {
@@ -46,11 +47,11 @@ struct KeychainView: View {
                             })
                         }
                     }
-                    .padding(AppTheme.paddingLarge)
+                    .padding(ThemeManager.paddingLarge)
                 }
             }
         }
-        .background(AppTheme.background)
+        .background(theme.background)
         .fileImporter(
             isPresented: $showImportKey,
             allowedContentTypes: [.data],
@@ -89,6 +90,7 @@ struct KeychainView: View {
 struct KeychainEntryCard: View {
     let server: Server
     let onImportKey: () -> Void
+    @Environment(ThemeManager.self) private var theme
     @Environment(LocalizationManager.self) private var loc
     @State private var showPassword = false
     @State private var newPassword = ""
@@ -110,13 +112,13 @@ struct KeychainEntryCard: View {
             HStack {
                 VStack(alignment: .leading, spacing: 2) {
                     Text(server.name)
-                        .font(.system(size: AppTheme.scaled(15), weight: .semibold))
-                        .foregroundStyle(AppTheme.textPrimary)
+                        .font(.system(size: theme.scaled(15), weight: .semibold))
+                        .foregroundStyle(theme.textPrimary)
                         .lineLimit(1)
                         .truncationMode(.tail)
                     Text("\(server.username)@\(server.hostname):\(server.port)")
-                        .font(.system(size: AppTheme.scaled(12), design: .monospaced))
-                        .foregroundStyle(AppTheme.textMuted)
+                        .font(.system(size: theme.scaled(12), design: .monospaced))
+                        .foregroundStyle(theme.textMuted)
                         .lineLimit(1)
                         .truncationMode(.tail)
                 }
@@ -124,15 +126,15 @@ struct KeychainEntryCard: View {
                 Spacer()
 
                 Text(server.authMethod.rawValue.capitalized)
-                    .font(.system(size: AppTheme.scaled(11), weight: .medium))
+                    .font(.system(size: theme.scaled(11), weight: .medium))
                     .padding(.horizontal, 8)
                     .padding(.vertical, 3)
-                    .background(AppTheme.border)
+                    .background(theme.border)
                     .clipShape(RoundedRectangle(cornerRadius: 4))
-                    .foregroundStyle(AppTheme.textSecondary)
+                    .foregroundStyle(theme.textSecondary)
             }
 
-            Divider().background(AppTheme.border)
+            Divider().background(theme.border)
 
             // Credentials
             HStack(spacing: 24) {
@@ -140,29 +142,29 @@ struct KeychainEntryCard: View {
                 VStack(alignment: .leading, spacing: 4) {
                     HStack(spacing: 6) {
                         Image(systemName: "lock.fill")
-                            .font(.system(size: AppTheme.scaled(11)))
-                            .foregroundStyle(AppTheme.textTertiary)
+                            .font(.system(size: theme.scaled(11)))
+                            .foregroundStyle(theme.textTertiary)
                         Text(loc["keychain.password"])
-                            .font(.system(size: AppTheme.scaled(11), weight: .semibold))
-                            .foregroundStyle(AppTheme.textTertiary)
+                            .font(.system(size: theme.scaled(11), weight: .semibold))
+                            .foregroundStyle(theme.textTertiary)
                             .textCase(.uppercase)
                     }
 
                     HStack(spacing: 8) {
                         if hasPassword {
                             Image(systemName: "checkmark.circle.fill")
-                                .foregroundStyle(AppTheme.statusOnline)
-                                .font(.system(size: AppTheme.scaled(14)))
+                                .foregroundStyle(theme.statusOnline)
+                                .font(.system(size: theme.scaled(14)))
                             Text(loc["keychain.stored"])
-                                .font(.system(size: AppTheme.scaled(12)))
-                                .foregroundStyle(AppTheme.textSecondary)
+                                .font(.system(size: theme.scaled(12)))
+                                .foregroundStyle(theme.textSecondary)
                         } else {
                             Image(systemName: "xmark.circle")
-                                .foregroundStyle(AppTheme.textTertiary)
-                                .font(.system(size: AppTheme.scaled(14)))
+                                .foregroundStyle(theme.textTertiary)
+                                .font(.system(size: theme.scaled(14)))
                             Text(loc["keychain.not_set"])
-                                .font(.system(size: AppTheme.scaled(12)))
-                                .foregroundStyle(AppTheme.textMuted)
+                                .font(.system(size: theme.scaled(12)))
+                                .foregroundStyle(theme.textMuted)
                         }
 
                         if isEditing {
@@ -185,29 +187,29 @@ struct KeychainEntryCard: View {
                 VStack(alignment: .leading, spacing: 4) {
                     HStack(spacing: 6) {
                         Image(systemName: "key.fill")
-                            .font(.system(size: AppTheme.scaled(11)))
-                            .foregroundStyle(AppTheme.textTertiary)
+                            .font(.system(size: theme.scaled(11)))
+                            .foregroundStyle(theme.textTertiary)
                         Text(loc["keychain.ssh_key"])
-                            .font(.system(size: AppTheme.scaled(11), weight: .semibold))
-                            .foregroundStyle(AppTheme.textTertiary)
+                            .font(.system(size: theme.scaled(11), weight: .semibold))
+                            .foregroundStyle(theme.textTertiary)
                             .textCase(.uppercase)
                     }
 
                     HStack(spacing: 8) {
                         if hasKey {
                             Image(systemName: "checkmark.circle.fill")
-                                .foregroundStyle(AppTheme.statusOnline)
-                                .font(.system(size: AppTheme.scaled(14)))
+                                .foregroundStyle(theme.statusOnline)
+                                .font(.system(size: theme.scaled(14)))
                             Text(loc["keychain.imported"])
-                                .font(.system(size: AppTheme.scaled(12)))
-                                .foregroundStyle(AppTheme.textSecondary)
+                                .font(.system(size: theme.scaled(12)))
+                                .foregroundStyle(theme.textSecondary)
                         } else {
                             Image(systemName: "xmark.circle")
-                                .foregroundStyle(AppTheme.textTertiary)
-                                .font(.system(size: AppTheme.scaled(14)))
+                                .foregroundStyle(theme.textTertiary)
+                                .font(.system(size: theme.scaled(14)))
                             Text(loc["keychain.not_set"])
-                                .font(.system(size: AppTheme.scaled(12)))
-                                .foregroundStyle(AppTheme.textMuted)
+                                .font(.system(size: theme.scaled(12)))
+                                .foregroundStyle(theme.textMuted)
                         }
                     }
                 }
@@ -254,12 +256,12 @@ struct KeychainEntryCard: View {
                 }
             }
         }
-        .padding(AppTheme.paddingMedium)
-        .background(AppTheme.surfacePrimary)
-        .clipShape(RoundedRectangle(cornerRadius: AppTheme.cornerRadius))
+        .padding(ThemeManager.paddingMedium)
+        .background(theme.surfacePrimary)
+        .clipShape(RoundedRectangle(cornerRadius: ThemeManager.cornerRadius))
         .overlay(
-            RoundedRectangle(cornerRadius: AppTheme.cornerRadius)
-                .stroke(AppTheme.border, lineWidth: 1)
+            RoundedRectangle(cornerRadius: ThemeManager.cornerRadius)
+                .stroke(theme.border, lineWidth: 1)
         )
     }
 

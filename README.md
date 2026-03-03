@@ -2,6 +2,8 @@
 
 A native macOS application for monitoring Linux servers via SSH. Built with SwiftUI and SwiftData.
 
+![ServerPulse Dashboard](media/dashboard.png)
+
 ## Features
 
 - **Server Monitoring** - Real-time CPU, memory, disk, network and temperature metrics via SSH
@@ -11,7 +13,7 @@ A native macOS application for monitoring Linux servers via SSH. Built with Swif
 - **Command Snippets** - Organize reusable commands in categories
 - **SSH Keychain** - Secure credential storage in macOS Keychain
 - **8 Languages** - English, German, French, Spanish, Portuguese, Russian, Japanese, Chinese
-- **Dark Theme** - Material Design dark color scheme with dynamic utilization colors
+- **5 Themes** - Material Dark, Nord, Dracula, Catppuccin Mocha, Tokyo Night
 
 ## Requirements
 
@@ -48,7 +50,7 @@ cp -R dist/ServerPulse.app ~/Applications/
 ServerPulse/
 ├── App/                    # App entry point and delegate
 ├── Models/                 # SwiftData models (Server, Snippet, Metrics, Docker)
-├── Theme/                  # Material Design color tokens and UI scaling
+├── Theme/                  # Theme system with 5 color presets and UI scaling
 ├── Utilities/              # ByteFormatter, RingBuffer
 ├── Services/
 │   ├── SSH/                # SSHSession actor, connection manager
@@ -66,7 +68,7 @@ ServerPulse/
     ├── Dashboard/          # Server overview with live metrics
     ├── ServerDetail/       # Detailed server metrics view
     ├── Containers/         # Docker container dashboard
-    ├── Terminal/            # Multi-tab SSH terminal
+    ├── Terminal/           # Multi-tab SSH terminal
     ├── Hosts/              # Add/edit server sheet
     ├── Execute/            # Multi-server command execution
     ├── Snippets/           # Command snippet manager
@@ -83,6 +85,16 @@ ServerPulse/
 ## Adding Languages
 
 Drop a JSON file into `ServerPulse/Resources/Localization/` following the existing format (e.g. `it.json` for Italian). The file will be detected automatically at runtime. See `en.json` for the full list of keys.
+
+## Screenshots
+
+| Add Server | Docker Containers |
+|:---:|:---:|
+| ![Add Server](media/add-server.png) | ![Containers](media/containers.png) |
+
+| Terminal | App Icon |
+|:---:|:---:|
+| ![Terminal](media/terminal.png) | ![App Icon](media/dock-icon.png) |
 
 ## License
 

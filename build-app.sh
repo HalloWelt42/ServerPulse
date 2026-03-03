@@ -7,7 +7,7 @@ set -euo pipefail
 MODE="${1:---release}"
 APP_NAME="ServerPulse"
 BUNDLE_ID="com.serverpulse.app"
-VERSION="1.0.0"
+VERSION="1.0.2"
 BUILD_NUMBER="1"
 OUTPUT_DIR="$(pwd)/dist"
 APP_PATH="${OUTPUT_DIR}/${APP_NAME}.app"
@@ -98,6 +98,8 @@ cat > "${APP_PATH}/Contents/Info.plist" << PLIST
     <string></string>
     <key>NSPrincipalClass</key>
     <string>NSApplication</string>
+    <key>CFBundleIconFile</key>
+    <string>AppIcon</string>
     <key>LSApplicationCategoryType</key>
     <string>public.app-category.utilities</string>
 </dict>
@@ -105,6 +107,13 @@ cat > "${APP_PATH}/Contents/Info.plist" << PLIST
 PLIST
 
 echo "  Info.plist created"
+
+# 5b. Copy app icon
+ICON_SRC="ServerPulse/Resources/AppIcon.icns"
+if [ -f "$ICON_SRC" ]; then
+    cp "$ICON_SRC" "${APP_PATH}/Contents/Resources/AppIcon.icns"
+    echo "  App icon copied"
+fi
 
 # 6. Ad-hoc code signing
 echo -e "${YELLOW}Code signing...${NC}"

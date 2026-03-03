@@ -9,6 +9,7 @@ struct ServerPulseApp: App {
     @State private var dockerService = DockerService()
     @State private var terminalManager = TerminalSessionManager()
     @State private var localization = LocalizationManager.shared
+    @State private var themeManager = ThemeManager.shared
 
     init() {
         let cm = SSHConnectionManager()
@@ -24,6 +25,7 @@ struct ServerPulseApp: App {
                 .environment(dockerService)
                 .environment(terminalManager)
                 .environment(localization)
+                .environment(themeManager)
                 .modelContainer(DataController.shared.container)
                 .preferredColorScheme(.dark)
                 .frame(minWidth: 720, minHeight: 480)
@@ -33,6 +35,7 @@ struct ServerPulseApp: App {
         Settings {
             SettingsView()
                 .environment(localization)
+                .environment(themeManager)
                 .modelContainer(DataController.shared.container)
                 .preferredColorScheme(.dark)
         }

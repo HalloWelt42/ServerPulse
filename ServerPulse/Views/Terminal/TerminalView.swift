@@ -6,6 +6,7 @@ struct TerminalView: View {
     @Environment(SSHConnectionManager.self) private var connectionManager
     @Environment(TerminalSessionManager.self) private var terminalManager
     @Environment(LocalizationManager.self) private var loc
+    @Environment(ThemeManager.self) private var theme
     @Query(sort: \Server.sortOrder) private var servers: [Server]
     @State private var showServerPicker = false
 
@@ -19,7 +20,7 @@ struct TerminalView: View {
                 terminalContent
             }
         }
-        .background(AppTheme.background)
+        .background(theme.background)
         .sheet(isPresented: $showServerPicker) {
             serverPickerSheet
         }
@@ -31,19 +32,19 @@ struct TerminalView: View {
         VStack(spacing: 16) {
             Spacer()
             Image(systemName: "terminal.fill")
-                .font(.system(size: AppTheme.scaled(48)))
-                .foregroundStyle(AppTheme.textTertiary)
+                .font(.system(size: theme.scaled(48)))
+                .foregroundStyle(theme.textTertiary)
             Text(loc["terminal.empty.title"])
-                .font(.system(size: AppTheme.scaled(18), weight: .semibold))
-                .foregroundStyle(AppTheme.textMuted)
+                .font(.system(size: theme.scaled(18), weight: .semibold))
+                .foregroundStyle(theme.textMuted)
             Text(loc["terminal.empty.subtitle"])
-                .font(.system(size: AppTheme.scaled(13)))
-                .foregroundStyle(AppTheme.textTertiary)
+                .font(.system(size: theme.scaled(13)))
+                .foregroundStyle(theme.textTertiary)
             Button(loc["terminal.empty.new"]) {
                 showServerPicker = true
             }
             .buttonStyle(.borderedProminent)
-            .tint(AppTheme.buttonPrimary)
+            .tint(theme.buttonPrimary)
             .handCursorOnHover()
             Spacer()
         }
@@ -67,8 +68,8 @@ struct TerminalView: View {
                 showServerPicker = true
             } label: {
                 Image(systemName: "plus")
-                    .font(.system(size: AppTheme.scaled(14)))
-                    .foregroundStyle(AppTheme.textTertiary)
+                    .font(.system(size: theme.scaled(14)))
+                    .foregroundStyle(theme.textTertiary)
                     .padding(.horizontal, 10)
                     .padding(.vertical, 6)
             }
@@ -79,9 +80,9 @@ struct TerminalView: View {
         }
         .padding(.horizontal, 8)
         .frame(height: 36)
-        .background(AppTheme.surfaceSecondary)
+        .background(theme.surfaceSecondary)
         .overlay(alignment: .bottom) {
-            Divider().background(AppTheme.border)
+            Divider().background(theme.border)
         }
     }
 
@@ -93,15 +94,15 @@ struct TerminalView: View {
             HStack {
                 HStack(spacing: 8) {
                     Circle()
-                        .fill(session.isConnected ? AppTheme.statusOnline : AppTheme.statusOffline)
+                        .fill(session.isConnected ? theme.statusOnline : theme.statusOffline)
                         .frame(width: 6, height: 6)
                     Text(loc["terminal.connected_to"] + " ")
-                        .foregroundStyle(AppTheme.textMuted) +
+                        .foregroundStyle(theme.textMuted) +
                     Text(session.serverName)
-                        .foregroundStyle(AppTheme.textPrimary)
+                        .foregroundStyle(theme.textPrimary)
                         .bold()
                 }
-                .font(.system(size: AppTheme.scaled(12)))
+                .font(.system(size: theme.scaled(12)))
                 .lineLimit(1)
 
                 Spacer()
@@ -109,7 +110,7 @@ struct TerminalView: View {
                 Button(loc["terminal.disconnect"]) {
                     Task { await terminalManager.closeSession(id: session.id) }
                 }
-                .foregroundStyle(AppTheme.textSecondary)
+                .foregroundStyle(theme.textSecondary)
                 .buttonStyle(.bordered)
                 .controlSize(.small)
                 .handCursorOnHover()
@@ -118,7 +119,7 @@ struct TerminalView: View {
             .padding(.vertical, 6)
             .background(Color(red: 0.13, green: 0.13, blue: 0.13))
             .overlay(alignment: .bottom) {
-                Divider().background(AppTheme.border)
+                Divider().background(theme.border)
             }
         }
     }
@@ -149,7 +150,7 @@ struct TerminalView: View {
 
             if connectedServers.isEmpty {
                 Text(loc["terminal.picker.empty"])
-                    .foregroundStyle(AppTheme.textMuted)
+                    .foregroundStyle(theme.textMuted)
                     .padding()
             } else {
                 List(connectedServers) { server in
@@ -172,7 +173,7 @@ struct TerminalView: View {
                             }
                             Spacer()
                             Image(systemName: "terminal")
-                                .foregroundStyle(AppTheme.buttonPrimary)
+                                .foregroundStyle(theme.buttonPrimary)
                         }
                     }
                     .buttonStyle(.plain)
@@ -197,28 +198,29 @@ private struct TerminalTab: View {
     let isConnected: Bool
     let onSelect: () -> Void
     let onClose: () -> Void
+    @Environment(ThemeManager.self) private var theme
 
     var body: some View {
         HStack(spacing: 6) {
             Circle()
-                .fill(isConnected ? AppTheme.statusOnline : AppTheme.statusOffline)
+                .fill(isConnected ? theme.statusOnline : theme.statusOffline)
                 .frame(width: 6, height: 6)
             Text(title)
-                .font(.system(size: AppTheme.scaled(12), weight: .medium))
-                .foregroundStyle(isActive ? AppTheme.textPrimary : AppTheme.textMuted)
+                .font(.system(size: theme.scaled(12), weight: .medium))
+                .foregroundStyle(isActive ? theme.textPrimary : theme.textMuted)
                 .lineLimit(1)
                 .truncationMode(.tail)
             Button(action: onClose) {
                 Image(systemName: "xmark")
-                    .font(.system(size: AppTheme.scaled(8), weight: .bold))
-                    .foregroundStyle(AppTheme.textTertiary)
+                    .font(.system(size: theme.scaled(8), weight: .bold))
+                    .foregroundStyle(theme.textTertiary)
             }
             .buttonStyle(.plain)
             .handCursorOnHover()
         }
         .padding(.horizontal, 14)
         .padding(.vertical, 6)
-        .background(isActive ? AppTheme.surfacePrimary : Color.clear)
+        .background(isActive ? theme.surfacePrimary : Color.clear)
         .clipShape(RoundedRectangle(cornerRadius: 6, style: .continuous))
         .onTapGesture(perform: onSelect)
         .handCursorOnHover()

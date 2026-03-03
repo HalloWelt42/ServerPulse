@@ -1,6 +1,7 @@
 import SwiftUI
 
 struct DonationView: View {
+    @Environment(ThemeManager.self) private var theme
     @Environment(LocalizationManager.self) private var loc
     @State private var selectedCrypto: CryptoOption? = nil
     @State private var copiedAddress: String? = nil
@@ -65,15 +66,15 @@ struct DonationView: View {
                     // Open Source badge
                     HStack(spacing: 8) {
                         Image(systemName: "lock.open.fill")
-                            .font(.system(size: AppTheme.scaled(12)))
-                            .foregroundStyle(AppTheme.statusOnline)
+                            .font(.system(size: theme.scaled(12)))
+                            .foregroundStyle(theme.statusOnline)
                         Text(loc["donate.open_source_badge"])
-                            .font(.system(size: AppTheme.scaled(12), weight: .medium))
-                            .foregroundStyle(AppTheme.textSecondary)
+                            .font(.system(size: theme.scaled(12), weight: .medium))
+                            .foregroundStyle(theme.textSecondary)
                     }
                     .padding(.horizontal, 16)
                     .padding(.vertical, 8)
-                    .background(AppTheme.statusOnline.opacity(0.08))
+                    .background(theme.statusOnline.opacity(0.08))
                     .clipShape(Capsule())
 
                     // Ko-fi Button
@@ -84,35 +85,60 @@ struct DonationView: View {
                     } label: {
                         HStack(spacing: 10) {
                             Image(systemName: "cup.and.saucer.fill")
-                                .font(.system(size: AppTheme.scaled(18)))
+                                .font(.system(size: theme.scaled(18)))
                             Text(loc["donate.kofi_button"])
-                                .font(.system(size: AppTheme.scaled(16), weight: .bold))
+                                .font(.system(size: theme.scaled(16), weight: .bold))
                         }
                         .foregroundStyle(.white)
                         .padding(.horizontal, 32)
                         .padding(.vertical, 16)
                         .background(
                             LinearGradient(
-                                colors: [AppTheme.buttonPrimary, AppTheme.buttonPrimaryHover],
+                                colors: [theme.buttonPrimary, theme.buttonPrimaryHover],
                                 startPoint: .leading,
                                 endPoint: .trailing
                             )
                         )
                         .clipShape(RoundedRectangle(cornerRadius: 12))
-                        .shadow(color: AppTheme.buttonPrimary.opacity(0.3), radius: 8, y: 4)
+                        .shadow(color: theme.buttonPrimary.opacity(0.3), radius: 8, y: 4)
+                    }
+                    .buttonStyle(.plain)
+                    .handCursorOnHover()
+
+                    // GitHub Open Source link
+                    Button {
+                        if let url = URL(string: "https://github.com/HalloWelt42/ServerPulse") {
+                            NSWorkspace.shared.open(url)
+                        }
+                    } label: {
+                        HStack(spacing: 8) {
+                            Image(systemName: "chevron.left.forwardslash.chevron.right")
+                                .font(.system(size: theme.scaled(14)))
+                            Text(loc["donate.github_button"])
+                                .font(.system(size: theme.scaled(13), weight: .semibold))
+                        }
+                        .foregroundStyle(theme.textSecondary)
+                        .padding(.horizontal, 24)
+                        .padding(.vertical, 12)
+                        .background(theme.surfacePrimary)
+                        .clipShape(RoundedRectangle(cornerRadius: 10))
+                        .overlay(
+                            RoundedRectangle(cornerRadius: 10)
+                                .stroke(theme.border, lineWidth: 1)
+                        )
                     }
                     .buttonStyle(.plain)
                     .handCursorOnHover()
 
                     Divider()
-                        .overlay(AppTheme.border)
+                        .overlay(theme.border)
                         .padding(.horizontal, 60)
 
                     // Crypto Section
                     VStack(spacing: 20) {
                         Text(loc["donate.crypto_title"])
-                            .font(.system(size: AppTheme.scaled(18), weight: .semibold))
-                            .foregroundStyle(AppTheme.textPrimary)
+                            .font(.system(size: theme.scaled(18), weight: .semibold))
+                            .foregroundStyle(theme.textPrimary)
 
                         // Crypto buttons
                         HStack(spacing: 14) {
@@ -130,8 +156,8 @@ struct DonationView: View {
                                 // Address
                                 VStack(spacing: 10) {
                                     Text(selected.address)
-                                        .font(.system(size: AppTheme.scaled(12), design: .monospaced))
-                                        .foregroundStyle(AppTheme.textSecondary)
+                                        .font(.system(size: theme.scaled(12), design: .monospaced))
+                                        .foregroundStyle(theme.textSecondary)
                                         .textSelection(.enabled)
                                         .lineLimit(1)
                                         .truncationMode(.middle)
@@ -149,17 +175,17 @@ struct DonationView: View {
                                     } label: {
                                         HStack(spacing: 6) {
                                             Image(systemName: copiedAddress == selected.rawValue ? "checkmark" : "doc.on.doc")
-                                                .font(.system(size: AppTheme.scaled(12)))
+                                                .font(.system(size: theme.scaled(12)))
                                             Text(copiedAddress == selected.rawValue ? loc["donate.copied"] : loc["donate.copy_address"])
-                                                .font(.system(size: AppTheme.scaled(12), weight: .semibold))
+                                                .font(.system(size: theme.scaled(12), weight: .semibold))
                                         }
-                                        .foregroundStyle(copiedAddress == selected.rawValue ? AppTheme.statusOnline : AppTheme.buttonPrimary)
+                                        .foregroundStyle(copiedAddress == selected.rawValue ? theme.statusOnline : theme.buttonPrimary)
                                         .padding(.horizontal, 18)
                                         .padding(.vertical, 9)
                                         .background(
                                             copiedAddress == selected.rawValue
-                                                ? AppTheme.statusOnline.opacity(0.1)
-                                                : AppTheme.buttonPrimary.opacity(0.1)
+                                                ? theme.statusOnline.opacity(0.1)
+                                                : theme.buttonPrimary.opacity(0.1)
                                         )
                                         .clipShape(Capsule())
                                     }
@@ -168,11 +194,11 @@ struct DonationView: View {
                                 }
                             }
                             .padding(24)
-                            .background(AppTheme.surfacePrimary)
+                            .background(theme.surfacePrimary)
                             .clipShape(RoundedRectangle(cornerRadius: 12))
                             .overlay(
                                 RoundedRectangle(cornerRadius: 12)
-                                    .stroke(AppTheme.border, lineWidth: 1)
+                                    .stroke(theme.border, lineWidth: 1)
                             )
                             .transition(.opacity.combined(with: .scale(scale: 0.95)))
                             .animation(.easeInOut(duration: 0.2), value: selectedCrypto)
@@ -187,7 +213,7 @@ struct DonationView: View {
                 .padding(.horizontal, 48)
             }
         }
-        .background(AppTheme.background)
+        .background(theme.background)
         .onAppear {
             withAnimation(.easeInOut(duration: 0.8).repeatForever(autoreverses: true)) {
                 heartBeat = true
@@ -216,24 +242,24 @@ struct DonationView: View {
             // Main header with hearts
             HStack(spacing: 14) {
                 Image(systemName: "heart.fill")
-                    .font(.system(size: AppTheme.scaled(24)))
+                    .font(.system(size: theme.scaled(24)))
                     .foregroundStyle(.white.opacity(0.9))
                     .scaleEffect(heartBeat ? 1.15 : 0.95)
 
                 VStack(spacing: 6) {
                     Text(loc["donate.title"])
-                        .font(.system(size: AppTheme.scaled(26), weight: .bold))
+                        .font(.system(size: theme.scaled(26), weight: .bold))
                         .foregroundStyle(.white)
 
                     Text(loc["donate.subtitle"])
-                        .font(.system(size: AppTheme.scaled(13)))
+                        .font(.system(size: theme.scaled(13)))
                         .foregroundStyle(.white.opacity(0.8))
                         .multilineTextAlignment(.center)
                         .frame(maxWidth: 380)
                 }
 
                 Image(systemName: "heart.fill")
-                    .font(.system(size: AppTheme.scaled(24)))
+                    .font(.system(size: theme.scaled(24)))
                     .foregroundStyle(.white.opacity(0.9))
                     .scaleEffect(heartBeat ? 0.95 : 1.15)
             }
@@ -241,10 +267,10 @@ struct DonationView: View {
             // "Made with love" badge
             HStack(spacing: 6) {
                 Image(systemName: "heart.circle.fill")
-                    .font(.system(size: AppTheme.scaled(14)))
+                    .font(.system(size: theme.scaled(14)))
                     .foregroundStyle(.white)
                 Text(loc["donate.made_with_love"])
-                    .font(.system(size: AppTheme.scaled(13), weight: .semibold))
+                    .font(.system(size: theme.scaled(13), weight: .semibold))
                     .foregroundStyle(.white.opacity(0.9))
             }
             .padding(.horizontal, 16)
@@ -320,19 +346,19 @@ struct DonationView: View {
         } label: {
             HStack(spacing: 8) {
                 Image(systemName: crypto.icon)
-                    .font(.system(size: AppTheme.scaled(16)))
+                    .font(.system(size: theme.scaled(16)))
                     .foregroundStyle(crypto.color)
                 Text(crypto.displayName)
-                    .font(.system(size: AppTheme.scaled(13), weight: .semibold))
-                    .foregroundStyle(isSelected ? AppTheme.textPrimary : AppTheme.textSecondary)
+                    .font(.system(size: theme.scaled(13), weight: .semibold))
+                    .foregroundStyle(isSelected ? theme.textPrimary : theme.textSecondary)
             }
             .padding(.horizontal, 18)
             .padding(.vertical, 10)
-            .background(isSelected ? crypto.color.opacity(0.15) : AppTheme.surfacePrimary)
+            .background(isSelected ? crypto.color.opacity(0.15) : theme.surfacePrimary)
             .clipShape(RoundedRectangle(cornerRadius: 10))
             .overlay(
                 RoundedRectangle(cornerRadius: 10)
-                    .stroke(isSelected ? crypto.color.opacity(0.5) : AppTheme.border, lineWidth: 1)
+                    .stroke(isSelected ? crypto.color.opacity(0.5) : theme.border, lineWidth: 1)
             )
         }
         .buttonStyle(.plain)
@@ -357,13 +383,13 @@ struct DonationView: View {
             VStack(spacing: 8) {
                 Image(systemName: "qrcode")
                     .font(.system(size: 80))
-                    .foregroundStyle(AppTheme.textTertiary)
+                    .foregroundStyle(theme.textTertiary)
                 Text(loc["donate.qr_unavailable"])
-                    .font(.system(size: AppTheme.scaled(11)))
-                    .foregroundStyle(AppTheme.textTertiary)
+                    .font(.system(size: theme.scaled(11)))
+                    .foregroundStyle(theme.textTertiary)
             }
             .frame(width: 200, height: 200)
-            .background(AppTheme.surfaceSecondary)
+            .background(theme.surfaceSecondary)
             .clipShape(RoundedRectangle(cornerRadius: 8))
         }
     }

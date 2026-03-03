@@ -5,6 +5,7 @@ struct AddServerSheet: View {
     @Environment(\.dismiss) private var dismiss
     @Environment(\.modelContext) private var modelContext
     @Environment(LocalizationManager.self) private var loc
+    @Environment(ThemeManager.self) private var theme
 
     @State private var name = ""
     @State private var hostname = ""
@@ -38,29 +39,29 @@ struct AddServerSheet: View {
             HStack {
                 Button(loc["add_server.cancel"]) { dismiss() }
                     .keyboardShortcut(.escape)
-                    .foregroundStyle(AppTheme.textSecondary)
+                    .foregroundStyle(theme.textSecondary)
                     .handCursorOnHover()
 
                 Spacer()
 
                 Text(loc["add_server.title"])
-                    .font(.system(size: AppTheme.scaled(15), weight: .semibold))
-                    .foregroundStyle(AppTheme.textPrimary)
+                    .font(.system(size: theme.scaled(15), weight: .semibold))
+                    .foregroundStyle(theme.textPrimary)
 
                 Spacer()
 
                 Button(loc["add_server.save"]) { saveServer() }
                     .keyboardShortcut(.return)
-                    .foregroundStyle(isFormValid ? AppTheme.buttonPrimary : AppTheme.textMuted)
+                    .foregroundStyle(isFormValid ? theme.buttonPrimary : theme.textMuted)
                     .fontWeight(.bold)
                     .disabled(!isFormValid)
                     .handCursorOnHover()
             }
             .padding(.horizontal, 16)
             .padding(.vertical, 12)
-            .background(AppTheme.surfacePrimary)
+            .background(theme.surfacePrimary)
 
-            Divider().overlay(AppTheme.border)
+            Divider().overlay(theme.border)
 
             // Form rows
             ScrollView {
@@ -72,7 +73,7 @@ struct AddServerSheet: View {
                         TextField(loc["add_server.placeholder.name"], text: $name)
                             .textFieldStyle(.plain)
                             .multilineTextAlignment(.trailing)
-                            .foregroundStyle(AppTheme.textPrimary)
+                            .foregroundStyle(theme.textPrimary)
                             .onChange(of: name) { _, val in
                                 if val.count > 48 { name = String(val.prefix(48)) }
                             }
@@ -85,20 +86,20 @@ struct AddServerSheet: View {
                             TextField(loc["add_server.placeholder.host"], text: $hostname)
                                 .textFieldStyle(.plain)
                                 .multilineTextAlignment(.trailing)
-                                .foregroundStyle(AppTheme.textPrimary)
+                                .foregroundStyle(theme.textPrimary)
                                 .onChange(of: hostname) { _, val in
                                     hostname = val.filter { !$0.isWhitespace }
                                     if hostname.count > 253 { hostname = String(hostname.prefix(253)) }
                                 }
 
                             Text(":")
-                                .foregroundStyle(AppTheme.textMuted)
+                                .foregroundStyle(theme.textMuted)
 
                             TextField("22", text: $port)
                                 .textFieldStyle(.plain)
                                 .frame(width: 44)
                                 .multilineTextAlignment(.trailing)
-                                .foregroundStyle(portNumber >= 1 && portNumber <= 65535 || port.isEmpty ? AppTheme.textPrimary : AppTheme.statusOffline)
+                                .foregroundStyle(portNumber >= 1 && portNumber <= 65535 || port.isEmpty ? theme.textPrimary : theme.statusOffline)
                                 .onChange(of: port) { _, val in
                                     port = val.filter(\.isNumber)
                                     if port.count > 5 { port = String(port.prefix(5)) }
@@ -112,7 +113,7 @@ struct AddServerSheet: View {
                         TextField("pi", text: $username)
                             .textFieldStyle(.plain)
                             .multilineTextAlignment(.trailing)
-                            .foregroundStyle(AppTheme.textPrimary)
+                            .foregroundStyle(theme.textPrimary)
                             .onChange(of: username) { _, val in
                                 username = val.filter { !$0.isWhitespace }
                                 if username.count > 32 { username = String(username.prefix(32)) }
@@ -141,20 +142,20 @@ struct AddServerSheet: View {
                                     TextField(loc["add_server.placeholder.password"], text: $password)
                                         .textFieldStyle(.plain)
                                         .multilineTextAlignment(.trailing)
-                                        .foregroundStyle(AppTheme.textPrimary)
+                                        .foregroundStyle(theme.textPrimary)
                                 } else {
                                     SecureField(loc["add_server.placeholder.password"], text: $password)
                                         .textFieldStyle(.plain)
                                         .multilineTextAlignment(.trailing)
-                                        .foregroundStyle(AppTheme.textPrimary)
+                                        .foregroundStyle(theme.textPrimary)
                                 }
 
                                 Button {
                                     showPassword.toggle()
                                 } label: {
                                     Image(systemName: showPassword ? "eye.slash" : "eye")
-                                        .foregroundStyle(AppTheme.textMuted)
-                                        .font(.system(size: AppTheme.scaled(13)))
+                                        .foregroundStyle(theme.textMuted)
+                                        .font(.system(size: theme.scaled(13)))
                                 }
                                 .buttonStyle(.plain)
                                 .handCursorOnHover()
@@ -182,7 +183,7 @@ struct AddServerSheet: View {
                         Toggle("", isOn: $dockerEnabled)
                             .labelsHidden()
                             .toggleStyle(.switch)
-                            .tint(AppTheme.buttonPrimary)
+                            .tint(theme.buttonPrimary)
                     }
 
                     // Test connection section
@@ -191,16 +192,16 @@ struct AddServerSheet: View {
 
                         HStack {
                             Image(systemName: testResult.contains("Success") ? "checkmark.circle.fill" : "xmark.circle.fill")
-                                .foregroundStyle(testResult.contains("Success") ? AppTheme.statusOnline : AppTheme.statusOffline)
+                                .foregroundStyle(testResult.contains("Success") ? theme.statusOnline : theme.statusOffline)
                             Text(testResult)
-                                .font(.system(size: AppTheme.scaled(13)))
-                                .foregroundStyle(AppTheme.textSecondary)
+                                .font(.system(size: theme.scaled(13)))
+                                .foregroundStyle(theme.textSecondary)
                                 .lineLimit(2)
                             Spacer()
                         }
                         .padding(.horizontal, 16)
                         .padding(.vertical, 10)
-                        .background(AppTheme.surfacePrimary)
+                        .background(theme.surfacePrimary)
                     }
 
                     Spacer().frame(height: 20)
@@ -231,7 +232,7 @@ struct AddServerSheet: View {
             }
         }
         .frame(width: 560, height: 600)
-        .background(AppTheme.background)
+        .background(theme.background)
     }
 
     // MARK: - Form Components
@@ -239,8 +240,8 @@ struct AddServerSheet: View {
     private func sectionHeader(_ title: String) -> some View {
         HStack {
             Text(title)
-                .font(.system(size: AppTheme.scaled(11), weight: .medium))
-                .foregroundStyle(AppTheme.textMuted)
+                .font(.system(size: theme.scaled(11), weight: .medium))
+                .foregroundStyle(theme.textMuted)
             Spacer()
         }
         .padding(.horizontal, 16)
@@ -251,8 +252,8 @@ struct AddServerSheet: View {
     private func formRow<Content: View>(label: String, @ViewBuilder content: () -> Content) -> some View {
         HStack {
             Text(label)
-                .font(.system(size: AppTheme.scaled(14), weight: .medium))
-                .foregroundStyle(AppTheme.textSecondary)
+                .font(.system(size: theme.scaled(14), weight: .medium))
+                .foregroundStyle(theme.textSecondary)
                 .lineLimit(1)
                 .fixedSize(horizontal: true, vertical: false)
                 .frame(minWidth: 100, alignment: .leading)
@@ -263,13 +264,13 @@ struct AddServerSheet: View {
         }
         .padding(.horizontal, 16)
         .padding(.vertical, 10)
-        .background(AppTheme.surfacePrimary)
+        .background(theme.surfacePrimary)
     }
 
     @ViewBuilder
     private func formDivider() -> some View {
         Divider()
-            .overlay(AppTheme.border)
+            .overlay(theme.border)
             .padding(.leading, 16)
     }
 

@@ -2,6 +2,7 @@ import SwiftUI
 import SwiftData
 
 struct ExecuteView: View {
+    @Environment(ThemeManager.self) private var theme
     @Environment(SSHConnectionManager.self) private var connectionManager
     @Environment(LocalizationManager.self) private var loc
     @Query(sort: \Server.sortOrder) private var servers: [Server]
@@ -21,14 +22,14 @@ struct ExecuteView: View {
             // Header
             HStack {
                 Text(loc["execute.title"])
-                    .font(.system(size: AppTheme.scaled(24), weight: .bold))
-                    .foregroundStyle(AppTheme.textPrimary)
+                    .font(.system(size: theme.scaled(24), weight: .bold))
+                    .foregroundStyle(theme.textPrimary)
                     .lineLimit(1)
                     .fixedSize(horizontal: true, vertical: false)
                 Spacer()
             }
-            .padding(.horizontal, AppTheme.paddingLarge)
-            .padding(.vertical, AppTheme.paddingMedium)
+            .padding(.horizontal, ThemeManager.paddingLarge)
+            .padding(.vertical, ThemeManager.paddingMedium)
 
             HSplitView {
                 // Left: Command + Server selection
@@ -37,19 +38,19 @@ struct ExecuteView: View {
                     VStack(alignment: .leading, spacing: 6) {
                         HStack {
                             Text(loc["execute.command"])
-                                .font(.system(size: AppTheme.scaled(12), weight: .semibold))
-                                .foregroundStyle(AppTheme.textTertiary)
+                                .font(.system(size: theme.scaled(12), weight: .semibold))
+                                .foregroundStyle(theme.textTertiary)
                                 .textCase(.uppercase)
                             Spacer()
                             snippetPicker
                         }
 
                         TextEditor(text: $command)
-                            .font(.system(size: AppTheme.scaled(13), design: .monospaced))
+                            .font(.system(size: theme.scaled(13), design: .monospaced))
                             .scrollContentBackground(.hidden)
                             .padding(8)
-                            .background(AppTheme.surfaceSecondary)
-                            .clipShape(RoundedRectangle(cornerRadius: AppTheme.cornerRadiusSmall))
+                            .background(theme.surfaceSecondary)
+                            .clipShape(RoundedRectangle(cornerRadius: ThemeManager.cornerRadiusSmall))
                             .frame(minHeight: 80, maxHeight: 120)
                     }
 
@@ -57,8 +58,8 @@ struct ExecuteView: View {
                     VStack(alignment: .leading, spacing: 6) {
                         HStack {
                             Text(loc["execute.servers"])
-                                .font(.system(size: AppTheme.scaled(12), weight: .semibold))
-                                .foregroundStyle(AppTheme.textTertiary)
+                                .font(.system(size: theme.scaled(12), weight: .semibold))
+                                .foregroundStyle(theme.textTertiary)
                                 .textCase(.uppercase)
 
                             Spacer()
@@ -68,14 +69,14 @@ struct ExecuteView: View {
                             }
                             .font(.caption)
                             .buttonStyle(.plain)
-                            .foregroundStyle(AppTheme.buttonPrimary)
+                            .foregroundStyle(theme.buttonPrimary)
                             .handCursorOnHover()
                         }
 
                         if connectedServers.isEmpty {
                             Text(loc["execute.no_servers"])
                                 .font(.caption)
-                                .foregroundStyle(AppTheme.textMuted)
+                                .foregroundStyle(theme.textMuted)
                                 .padding()
                         } else {
                             ScrollView {
@@ -110,13 +111,13 @@ struct ExecuteView: View {
                         .frame(maxWidth: .infinity)
                     }
                     .buttonStyle(.borderedProminent)
-                    .tint(AppTheme.buttonPrimary)
+                    .tint(theme.buttonPrimary)
                     .disabled(command.isEmpty || selectedServerIds.isEmpty || isRunning)
                     .handCursorOnHover()
 
                     Spacer()
                 }
-                .padding(AppTheme.paddingLarge)
+                .padding(ThemeManager.paddingLarge)
                 .frame(minWidth: 300, maxWidth: 400)
 
                 // Right: Results
@@ -125,10 +126,10 @@ struct ExecuteView: View {
                         Spacer()
                         VStack(spacing: 12) {
                             Image(systemName: "play.circle.fill")
-                                .font(.system(size: AppTheme.scaled(48)))
-                                .foregroundStyle(AppTheme.textTertiary)
+                                .font(.system(size: theme.scaled(48)))
+                                .foregroundStyle(theme.textTertiary)
                             Text(loc["execute.results"])
-                                .foregroundStyle(AppTheme.textMuted)
+                                .foregroundStyle(theme.textMuted)
                         }
                         .frame(maxWidth: .infinity)
                         Spacer()
@@ -139,14 +140,14 @@ struct ExecuteView: View {
                                     ExecutionResultCard(execution: exec)
                                 }
                             }
-                            .padding(AppTheme.paddingMedium)
+                            .padding(ThemeManager.paddingMedium)
                         }
                     }
                 }
                 .frame(maxWidth: .infinity)
             }
         }
-        .background(AppTheme.background)
+        .background(theme.background)
     }
 
     private var snippetPicker: some View {
@@ -210,21 +211,22 @@ private struct ServerCheckRow: View {
     let server: Server
     let isSelected: Bool
     let onToggle: () -> Void
+    @Environment(ThemeManager.self) private var theme
 
     var body: some View {
         HStack(spacing: 10) {
             Image(systemName: isSelected ? "checkmark.circle.fill" : "circle")
-                .foregroundStyle(isSelected ? AppTheme.buttonPrimary : AppTheme.textTertiary)
+                .foregroundStyle(isSelected ? theme.buttonPrimary : theme.textTertiary)
 
             VStack(alignment: .leading, spacing: 1) {
                 Text(server.name)
-                    .font(.system(size: AppTheme.scaled(13), weight: .medium))
-                    .foregroundStyle(AppTheme.textPrimary)
+                    .font(.system(size: theme.scaled(13), weight: .medium))
+                    .foregroundStyle(theme.textPrimary)
                     .lineLimit(1)
                     .truncationMode(.tail)
                 Text(server.hostname)
-                    .font(.system(size: AppTheme.scaled(11)))
-                    .foregroundStyle(AppTheme.textMuted)
+                    .font(.system(size: theme.scaled(11)))
+                    .foregroundStyle(theme.textMuted)
                     .lineLimit(1)
                     .truncationMode(.tail)
             }
@@ -232,7 +234,7 @@ private struct ServerCheckRow: View {
         }
         .padding(.vertical, 6)
         .padding(.horizontal, 10)
-        .background(isSelected ? AppTheme.buttonPrimary.opacity(0.1) : Color.clear)
+        .background(isSelected ? theme.buttonPrimary.opacity(0.1) : Color.clear)
         .clipShape(RoundedRectangle(cornerRadius: 6))
         .contentShape(Rectangle())
         .onTapGesture(perform: onToggle)
@@ -244,6 +246,7 @@ private struct ServerCheckRow: View {
 
 struct ExecutionResultCard: View {
     let execution: CommandExecution
+    @Environment(ThemeManager.self) private var theme
     @Environment(LocalizationManager.self) private var loc
 
     var body: some View {
@@ -251,11 +254,11 @@ struct ExecutionResultCard: View {
             HStack {
                 HStack(spacing: 6) {
                     Circle()
-                        .fill(execution.succeeded ? AppTheme.statusOnline : AppTheme.statusOffline)
+                        .fill(execution.succeeded ? theme.statusOnline : theme.statusOffline)
                         .frame(width: 8, height: 8)
                     Text(execution.serverName)
-                        .font(.system(size: AppTheme.scaled(13), weight: .semibold))
-                        .foregroundStyle(AppTheme.textPrimary)
+                        .font(.system(size: theme.scaled(13), weight: .semibold))
+                        .foregroundStyle(theme.textPrimary)
                         .lineLimit(1)
                         .truncationMode(.tail)
                 }
@@ -264,8 +267,8 @@ struct ExecutionResultCard: View {
 
                 if let exitCode = execution.exitCode {
                     Text(loc.string("execute.exit_code", exitCode))
-                        .font(.system(size: AppTheme.scaled(11), design: .monospaced))
-                        .foregroundStyle(execution.succeeded ? AppTheme.textMuted : AppTheme.statusOffline)
+                        .font(.system(size: theme.scaled(11), design: .monospaced))
+                        .foregroundStyle(execution.succeeded ? theme.textMuted : theme.statusOffline)
                 }
 
                 if execution.isRunning {
@@ -277,8 +280,8 @@ struct ExecutionResultCard: View {
             if !execution.output.isEmpty {
                 ScrollView(.horizontal, showsIndicators: false) {
                     Text(execution.output)
-                        .font(.system(size: AppTheme.scaled(11), design: .monospaced))
-                        .foregroundStyle(AppTheme.textSecondary)
+                        .font(.system(size: theme.scaled(11), design: .monospaced))
+                        .foregroundStyle(theme.textSecondary)
                         .textSelection(.enabled)
                 }
                 .frame(maxHeight: 200)
@@ -289,16 +292,16 @@ struct ExecutionResultCard: View {
 
             if let error = execution.error {
                 Text(error)
-                    .font(.system(size: AppTheme.scaled(11)))
-                    .foregroundStyle(AppTheme.statusOffline)
+                    .font(.system(size: theme.scaled(11)))
+                    .foregroundStyle(theme.statusOffline)
             }
         }
         .padding(12)
-        .background(AppTheme.surfacePrimary)
+        .background(theme.surfacePrimary)
         .clipShape(RoundedRectangle(cornerRadius: 10))
         .overlay(
             RoundedRectangle(cornerRadius: 10)
-                .stroke(AppTheme.border, lineWidth: 1)
+                .stroke(theme.border, lineWidth: 1)
         )
     }
 }

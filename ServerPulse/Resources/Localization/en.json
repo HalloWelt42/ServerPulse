@@ -95,6 +95,7 @@
   "settings.scale.normal": "Normal (100%)",
   "settings.scale.large": "Large (115%)",
   "settings.scale.xlarge": "Extra Large (130%)",
+  "settings.theme": "Color theme",
 
   "settings.section.terminal": "Terminal",
   "settings.terminal.font": "Font family",
@@ -243,6 +244,7 @@
   "donate.made_with_love": "Made with love in Sachsen-Anhalt",
   "donate.open_source_badge": "Open Source from Sachsen-Anhalt. No tracking, no ads, no compromises.",
   "donate.kofi_button": "Support on Ko-fi",
+  "donate.github_button": "View Source on GitHub",
   "donate.crypto_title": "Donate with Crypto",
   "donate.copy_address": "Copy Address",
   "donate.copied": "Copied!",

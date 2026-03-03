@@ -4,6 +4,7 @@ struct MainContentView: View {
     @State private var columnVisibility: NavigationSplitViewVisibility = .all
     @State private var selectedSection: SidebarSection? = .servers
     @Environment(TerminalSessionManager.self) private var terminalManager
+    @Environment(ThemeManager.self) private var theme
     @AppStorage("appLaunchCount") private var appLaunchCount: Int = 0
 
     var body: some View {
@@ -13,7 +14,7 @@ struct MainContentView: View {
         } detail: {
             detailView
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
-                .background(AppTheme.background)
+                .background(theme.background)
         }
         .navigationSplitViewStyle(.balanced)
         .preferredColorScheme(.dark)

@@ -95,6 +95,7 @@
   "settings.scale.normal": "正常 (100%)",
   "settings.scale.large": "大 (115%)",
   "settings.scale.xlarge": "特大 (130%)",
+  "settings.theme": "配色方案",
 
   "settings.section.terminal": "终端",
   "settings.terminal.font": "字体",
@@ -242,6 +243,7 @@
   "donate.made_with_love": "用爱制作于萨克森-安哈尔特",
   "donate.open_source_badge": "来自萨克森-安哈尔特的开源软件。无追踪、无广告、无妥协。",
   "donate.kofi_button": "在 Ko-fi 上支持",
+  "donate.github_button": "在 GitHub 上查看源码",
   "donate.crypto_title": "加密货币捐赠",
   "donate.copy_address": "复制地址",
   "donate.copied": "已复制！",

@@ -95,6 +95,7 @@
   "settings.scale.normal": "標準 (100%)",
   "settings.scale.large": "大 (115%)",
   "settings.scale.xlarge": "特大 (130%)",
+  "settings.theme": "カラーテーマ",
 
   "settings.section.terminal": "ターミナル",
   "settings.terminal.font": "フォント",
@@ -242,6 +243,7 @@
   "donate.made_with_love": "ザクセン＝アンハルトで愛を込めて作成",
   "donate.open_source_badge": "ザクセン＝アンハルト発のオープンソース。トラッキングなし、広告なし、妥協なし。",
   "donate.kofi_button": "Ko-fi でサポート",
+  "donate.github_button": "GitHub でソースを見る",
   "donate.crypto_title": "暗号通貨で寄付",
   "donate.copy_address": "アドレスをコピー",
   "donate.copied": "コピーしました！",

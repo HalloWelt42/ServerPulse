@@ -95,6 +95,7 @@
   "settings.scale.normal": "Normal (100%)",
   "settings.scale.large": "Grande (115%)",
   "settings.scale.xlarge": "Muy grande (130%)",
+  "settings.theme": "Tema de colores",
 
   "settings.section.terminal": "Terminal",
   "settings.terminal.font": "Familia de fuente",
@@ -243,6 +244,7 @@
   "donate.made_with_love": "Hecho con amor en Sachsen-Anhalt",
   "donate.open_source_badge": "Código abierto de Sachsen-Anhalt. Sin rastreo, sin anuncios, sin compromisos.",
   "donate.kofi_button": "Apoyar en Ko-fi",
+  "donate.github_button": "Ver código en GitHub",
   "donate.crypto_title": "Donar con cripto",
   "donate.copy_address": "Copiar dirección",
   "donate.copied": "¡Copiado!",

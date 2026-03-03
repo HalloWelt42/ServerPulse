@@ -95,6 +95,7 @@
   "settings.scale.normal": "Обычный (100%)",
   "settings.scale.large": "Большой (115%)",
   "settings.scale.xlarge": "Очень большой (130%)",
+  "settings.theme": "Цветовая тема",
 
   "settings.section.terminal": "Терминал",
   "settings.terminal.font": "Шрифт",
@@ -242,6 +243,7 @@
   "donate.made_with_love": "Сделано с любовью в Саксонии-Анхальт",
   "donate.open_source_badge": "Открытый код из Саксонии-Анхальт. Без отслеживания, без рекламы, без компромиссов.",
   "donate.kofi_button": "Поддержать на Ko-fi",
+  "donate.github_button": "Исходный код на GitHub",
   "donate.crypto_title": "Пожертвовать криптовалютой",
   "donate.copy_address": "Копировать адрес",
   "donate.copied": "Скопировано!",

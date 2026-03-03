@@ -7,6 +7,7 @@ struct ServerDetailView: View {
     @Environment(MetricsEngine.self) private var metricsEngine
     @Environment(TerminalSessionManager.self) private var terminalManager
     @Environment(LocalizationManager.self) private var loc
+    @Environment(ThemeManager.self) private var theme
     @Environment(\.dismiss) private var dismiss
 
     private var metrics: ServerMetrics? {
@@ -35,7 +36,7 @@ struct ServerDetailView: View {
                 }
                 .frame(minWidth: 380, maxWidth: 500)
 
-                Divider().overlay(AppTheme.border)
+                Divider().overlay(theme.border)
 
                 // Right: process list
                 ProcessTableView(server: server)
@@ -44,7 +45,7 @@ struct ServerDetailView: View {
                     .frame(maxWidth: .infinity)
             }
         }
-        .background(AppTheme.background)
+        .background(theme.background)
         .navigationBarBackButtonHidden(true)
     }
 
@@ -54,15 +55,15 @@ struct ServerDetailView: View {
         HStack(spacing: 12) {
             Button { dismiss() } label: {
                 Image(systemName: "chevron.left")
-                    .font(.system(size: AppTheme.scaled(18), weight: .semibold))
-                    .foregroundStyle(AppTheme.buttonPrimary)
+                    .font(.system(size: theme.scaled(18), weight: .semibold))
+                    .foregroundStyle(theme.buttonPrimary)
             }
             .buttonStyle(.plain)
             .handCursorOnHover()
 
             Text(server.name)
-                .font(.system(size: AppTheme.scaled(22), weight: .bold))
-                .foregroundStyle(AppTheme.textPrimary)
+                .font(.system(size: theme.scaled(22), weight: .bold))
+                .foregroundStyle(theme.textPrimary)
                 .lineLimit(1)
                 .truncationMode(.tail)
 
@@ -74,28 +75,28 @@ struct ServerDetailView: View {
                     HeaderStat(
                         label: loc["detail.header.cpu"],
                         value: "\(Int(m.cpu.totalUsage * 100))%",
-                        color: AppTheme.utilizationColor(m.cpu.totalUsage)
+                        color: theme.utilizationColor(m.cpu.totalUsage)
                     )
                     HeaderStat(
                         label: loc["detail.header.cores"],
                         value: "\(m.cpu.perCore.count)",
-                        color: AppTheme.textPrimary
+                        color: theme.textPrimary
                     )
                     HeaderStat(
                         label: loc["detail.header.idle"],
                         value: "\(Int(m.cpu.idle * 100))%",
-                        color: AppTheme.textPrimary
+                        color: theme.textPrimary
                     )
                     HeaderStat(
                         label: loc["detail.header.uptime"],
                         value: TimeFormatter.formatUptime(m.uptime),
-                        color: AppTheme.textPrimary
+                        color: theme.textPrimary
                     )
                     if let temp = m.temperature?.maxTemperature {
                         HeaderStat(
                             label: loc["detail.header.temp"],
                             value: "\(Int(temp))°C",
-                            color: temp >= 70 ? AppTheme.statusOffline : AppTheme.statusWarning
+                            color: temp >= 70 ? theme.statusOffline : theme.statusWarning
                         )
                     }
                 }
@@ -124,9 +125,9 @@ struct ServerDetailView: View {
         }
         .padding(.horizontal, 16)
         .padding(.vertical, 10)
-        .background(AppTheme.surfaceSecondary)
+        .background(theme.surfaceSecondary)
         .overlay(alignment: .bottom) {
-            Divider().overlay(AppTheme.border)
+            Divider().overlay(theme.border)
         }
     }
 
@@ -137,21 +138,21 @@ struct ServerDetailView: View {
             VStack(spacing: 12) {
                 HStack(alignment: .top) {
                     Text("\(Int((metrics?.cpu.totalUsage ?? 0) * 100))")
-                        .font(.system(size: AppTheme.scaled(36), weight: .bold, design: .rounded))
-                        .foregroundStyle(AppTheme.textPrimary)
+                        .font(.system(size: theme.scaled(36), weight: .bold, design: .rounded))
+                        .foregroundStyle(theme.textPrimary)
                     Text("%")
-                        .font(.system(size: AppTheme.scaled(16), weight: .medium))
-                        .foregroundStyle(AppTheme.textMuted)
+                        .font(.system(size: theme.scaled(16), weight: .medium))
+                        .foregroundStyle(theme.textMuted)
                         .offset(y: 6)
 
                     Spacer()
 
                     if let cpu = metrics?.cpu {
                         HStack(spacing: 16) {
-                            cpuStatLabel(loc["detail.cpu.system"], value: "\(Int(cpu.systemUsage * 100))%", color: AppTheme.statusOffline)
-                            cpuStatLabel(loc["detail.cpu.user"], value: "\(Int(cpu.userUsage * 100))%", color: AppTheme.statusOnline)
-                            cpuStatLabel(loc["detail.cpu.iowait"], value: "\(Int(cpu.ioWait * 100))%", color: AppTheme.statusWarning)
-                            cpuStatLabel(loc["detail.cpu.steal"], value: "\(Int(cpu.steal * 100))%", color: AppTheme.textMuted)
+                            cpuStatLabel(loc["detail.cpu.system"], value: "\(Int(cpu.systemUsage * 100))%", color: theme.statusOffline)
+                            cpuStatLabel(loc["detail.cpu.user"], value: "\(Int(cpu.userUsage * 100))%", color: theme.statusOnline)
+                            cpuStatLabel(loc["detail.cpu.iowait"], value: "\(Int(cpu.ioWait * 100))%", color: theme.statusWarning)
+                            cpuStatLabel(loc["detail.cpu.steal"], value: "\(Int(cpu.steal * 100))%", color: theme.textMuted)
                         }
                     }
                 }
@@ -173,7 +174,7 @@ struct ServerDetailView: View {
                     GaugeRing(
                         value: metrics?.cpu.totalUsage ?? 0,
                         label: "",
-                        color: AppTheme.utilizationColor(metrics?.cpu.totalUsage ?? 0),
+                        color: theme.utilizationColor(metrics?.cpu.totalUsage ?? 0),
                         lineWidth: 5,
                         size: 48,
                         showLabel: false,
@@ -189,13 +190,13 @@ struct ServerDetailView: View {
             HStack(spacing: 4) {
                 Circle().fill(color).frame(width: 6, height: 6)
                 Text(label)
-                    .font(.system(size: AppTheme.scaled(9), weight: .medium))
-                    .foregroundStyle(AppTheme.textTertiary)
+                    .font(.system(size: theme.scaled(9), weight: .medium))
+                    .foregroundStyle(theme.textTertiary)
                     .lineLimit(1)
             }
             Text(value)
-                .font(.system(size: AppTheme.scaled(13), weight: .semibold))
-                .foregroundStyle(AppTheme.textPrimary)
+                .font(.system(size: theme.scaled(13), weight: .semibold))
+                .foregroundStyle(theme.textPrimary)
                 .lineLimit(1)
         }
         .fixedSize(horizontal: true, vertical: false)
@@ -204,12 +205,12 @@ struct ServerDetailView: View {
     private func bottomStat(_ label: String, value: String) -> some View {
         VStack(spacing: 2) {
             Text(label)
-                .font(.system(size: AppTheme.scaled(9), weight: .medium))
-                .foregroundStyle(AppTheme.textTertiary)
+                .font(.system(size: theme.scaled(9), weight: .medium))
+                .foregroundStyle(theme.textTertiary)
                 .lineLimit(1)
             Text(value)
-                .font(.system(size: AppTheme.scaled(14), weight: .semibold))
-                .foregroundStyle(AppTheme.textPrimary)
+                .font(.system(size: theme.scaled(14), weight: .semibold))
+                .foregroundStyle(theme.textPrimary)
                 .lineLimit(1)
         }
         .fixedSize(horizontal: true, vertical: false)
@@ -222,16 +223,16 @@ struct ServerDetailView: View {
             VStack(spacing: 12) {
                 HStack(spacing: 16) {
                     VStack(alignment: .leading, spacing: 6) {
-                        memStatBlock(loc["detail.memory.free"], value: ByteFormatter.format(metrics?.memory.freeBytes ?? 0), color: AppTheme.statusOnline)
-                        memStatBlock(loc["detail.memory.used"], value: ByteFormatter.format(metrics?.memory.usedBytes ?? 0), color: AppTheme.utilizationColor(metrics?.memory.usagePercent ?? 0))
-                        memStatBlock(loc["detail.memory.page_cache"], value: ByteFormatter.format(metrics?.memory.cachedBytes ?? 0), color: AppTheme.cachedColor)
+                        memStatBlock(loc["detail.memory.free"], value: ByteFormatter.format(metrics?.memory.freeBytes ?? 0), color: theme.statusOnline)
+                        memStatBlock(loc["detail.memory.used"], value: ByteFormatter.format(metrics?.memory.usedBytes ?? 0), color: theme.utilizationColor(metrics?.memory.usagePercent ?? 0))
+                        memStatBlock(loc["detail.memory.page_cache"], value: ByteFormatter.format(metrics?.memory.cachedBytes ?? 0), color: theme.cachedColor)
                     }
                     .frame(maxWidth: .infinity, alignment: .leading)
 
                     GaugeRing(
                         value: metrics?.memory.usagePercent ?? 0,
                         label: "\(Int((metrics?.memory.usagePercent ?? 0) * 100))%",
-                        color: AppTheme.utilizationColor(metrics?.memory.usagePercent ?? 0),
+                        color: theme.utilizationColor(metrics?.memory.usagePercent ?? 0),
                         lineWidth: 6,
                         size: 72,
                         fontSize: 18,
@@ -249,10 +250,10 @@ struct ServerDetailView: View {
                             let cachedW = Double(mem.cachedBytes) / total * w
                             let freeW = Double(mem.freeBytes) / total * w
 
-                            Rectangle().fill(AppTheme.utilizationColor(mem.usagePercent)).frame(width: max(usedW, 0))
-                            Rectangle().fill(AppTheme.buffersColor).frame(width: max(bufW, 0))
-                            Rectangle().fill(AppTheme.cachedColor).frame(width: max(cachedW, 0))
-                            Rectangle().fill(AppTheme.statusOnline).frame(width: max(freeW, 0))
+                            Rectangle().fill(theme.utilizationColor(mem.usagePercent)).frame(width: max(usedW, 0))
+                            Rectangle().fill(theme.buffersColor).frame(width: max(bufW, 0))
+                            Rectangle().fill(theme.cachedColor).frame(width: max(cachedW, 0))
+                            Rectangle().fill(theme.statusOnline).frame(width: max(freeW, 0))
                         }
                         .clipShape(RoundedRectangle(cornerRadius: 4))
                     }
@@ -266,13 +267,13 @@ struct ServerDetailView: View {
         HStack(spacing: 8) {
             Circle().fill(color).frame(width: 6, height: 6)
             Text(label)
-                .font(.system(size: AppTheme.scaled(9), weight: .medium))
-                .foregroundStyle(AppTheme.textTertiary)
+                .font(.system(size: theme.scaled(9), weight: .medium))
+                .foregroundStyle(theme.textTertiary)
                 .lineLimit(1)
             Spacer()
             Text(value)
-                .font(.system(size: AppTheme.scaled(14), weight: .bold))
-                .foregroundStyle(AppTheme.textPrimary)
+                .font(.system(size: theme.scaled(14), weight: .bold))
+                .foregroundStyle(theme.textPrimary)
                 .lineLimit(1)
         }
     }
@@ -287,11 +288,11 @@ struct ServerDetailView: View {
                     HStack {
                         HStack(spacing: 6) {
                             Image(systemName: iface.id.contains("wlan") || iface.id.contains("wl") ? "wifi" : "cable.connector")
-                                .font(.system(size: AppTheme.scaled(11)))
-                                .foregroundStyle(AppTheme.statusOnline)
+                                .font(.system(size: theme.scaled(11)))
+                                .foregroundStyle(theme.statusOnline)
                             Text(iface.id)
-                                .font(.system(size: AppTheme.scaled(13), weight: .semibold))
-                                .foregroundStyle(AppTheme.textPrimary)
+                                .font(.system(size: theme.scaled(13), weight: .semibold))
+                                .foregroundStyle(theme.textPrimary)
                                 .lineLimit(1)
                         }
 
@@ -300,47 +301,47 @@ struct ServerDetailView: View {
                         VStack(alignment: .trailing, spacing: 1) {
                             HStack(spacing: 4) {
                                 Image(systemName: "arrow.up")
-                                    .font(.system(size: AppTheme.scaled(8), weight: .bold))
-                                    .foregroundStyle(AppTheme.activityUploadColor(iface.txBytesPerSec))
+                                    .font(.system(size: theme.scaled(8), weight: .bold))
+                                    .foregroundStyle(theme.activityUploadColor(iface.txBytesPerSec))
                                 Text(loc["detail.network.upload_rate"])
-                                    .foregroundStyle(AppTheme.textTertiary)
+                                    .foregroundStyle(theme.textTertiary)
                                 Text(ByteFormatter.formatRate(iface.txBytesPerSec))
-                                    .foregroundStyle(iface.txBytesPerSec > 0 ? AppTheme.statusOnline : AppTheme.textSecondary)
+                                    .foregroundStyle(iface.txBytesPerSec > 0 ? theme.statusOnline : theme.textSecondary)
                             }
                             HStack(spacing: 4) {
                                 Image(systemName: "arrow.down")
-                                    .font(.system(size: AppTheme.scaled(8), weight: .bold))
-                                    .foregroundStyle(AppTheme.activityDownloadColor(iface.rxBytesPerSec))
+                                    .font(.system(size: theme.scaled(8), weight: .bold))
+                                    .foregroundStyle(theme.activityDownloadColor(iface.rxBytesPerSec))
                                 Text(loc["detail.network.download_rate"])
-                                    .foregroundStyle(AppTheme.textTertiary)
+                                    .foregroundStyle(theme.textTertiary)
                                 Text(ByteFormatter.formatRate(iface.rxBytesPerSec))
-                                    .foregroundStyle(iface.rxBytesPerSec > 0 ? AppTheme.statusOffline : AppTheme.textSecondary)
+                                    .foregroundStyle(iface.rxBytesPerSec > 0 ? theme.statusOffline : theme.textSecondary)
                             }
                         }
-                        .font(.system(size: AppTheme.scaled(11), design: .monospaced))
+                        .font(.system(size: theme.scaled(11), design: .monospaced))
 
                         VStack(alignment: .trailing, spacing: 1) {
                             HStack(spacing: 4) {
                                 Text(loc["detail.network.upload_total"])
-                                    .foregroundStyle(AppTheme.textTertiary)
+                                    .foregroundStyle(theme.textTertiary)
                                 Text(ByteFormatter.format(iface.totalTxBytes))
-                                    .foregroundStyle(AppTheme.textSecondary)
+                                    .foregroundStyle(theme.textSecondary)
                             }
                             HStack(spacing: 4) {
                                 Text(loc["detail.network.download_total"])
-                                    .foregroundStyle(AppTheme.textTertiary)
+                                    .foregroundStyle(theme.textTertiary)
                                 Text(ByteFormatter.format(iface.totalRxBytes))
-                                    .foregroundStyle(AppTheme.textSecondary)
+                                    .foregroundStyle(theme.textSecondary)
                             }
                         }
-                        .font(.system(size: AppTheme.scaled(11), design: .monospaced))
+                        .font(.system(size: theme.scaled(11), design: .monospaced))
 
                         let maxRate = max(iface.txBytesPerSec, iface.rxBytesPerSec)
                         let ringVal = min(maxRate / 1_000_000, 1.0)
                         GaugeRing(
                             value: ringVal,
                             label: "",
-                            color: AppTheme.utilizationColor(ringVal),
+                            color: theme.utilizationColor(ringVal),
                             lineWidth: 3,
                             size: 32,
                             showLabel: false,
@@ -348,7 +349,7 @@ struct ServerDetailView: View {
                         )
                     }
                     .padding(8)
-                    .background(AppTheme.surfaceSecondary)
+                    .background(theme.surfaceSecondary)
                     .clipShape(RoundedRectangle(cornerRadius: 8))
                 }
             }
@@ -365,29 +366,29 @@ struct ServerDetailView: View {
                     VStack(alignment: .leading, spacing: 6) {
                         HStack {
                             Text(disk.mountPoint)
-                                .font(.system(size: AppTheme.scaled(13), weight: .semibold))
-                                .foregroundStyle(AppTheme.textPrimary)
+                                .font(.system(size: theme.scaled(13), weight: .semibold))
+                                .foregroundStyle(theme.textPrimary)
                                 .lineLimit(1)
                                 .truncationMode(.middle)
                             Spacer()
                             Text(disk.filesystem.uppercased())
-                                .font(.system(size: AppTheme.scaled(10), weight: .medium))
-                                .foregroundStyle(AppTheme.textTertiary)
+                                .font(.system(size: theme.scaled(10), weight: .medium))
+                                .foregroundStyle(theme.textTertiary)
                                 .padding(.horizontal, 6)
                                 .padding(.vertical, 2)
-                                .background(AppTheme.border)
+                                .background(theme.border)
                                 .clipShape(RoundedRectangle(cornerRadius: 4))
                             Text("\(ByteFormatter.format(disk.usedBytes))/\(ByteFormatter.format(disk.totalBytes))")
-                                .font(.system(size: AppTheme.scaled(12), design: .monospaced))
-                                .foregroundStyle(AppTheme.textMuted)
+                                .font(.system(size: theme.scaled(12), design: .monospaced))
+                                .foregroundStyle(theme.textMuted)
                         }
 
                         GeometryReader { geo in
                             ZStack(alignment: .leading) {
                                 RoundedRectangle(cornerRadius: 3)
-                                    .fill(AppTheme.border)
+                                    .fill(theme.border)
                                 RoundedRectangle(cornerRadius: 3)
-                                    .fill(AppTheme.utilizationColor(disk.usagePercent))
+                                    .fill(theme.utilizationColor(disk.usagePercent))
                                     .frame(width: geo.size.width * CGFloat(disk.usagePercent))
                                     .animation(.easeInOut(duration: 0.5), value: disk.usagePercent)
                             }
@@ -401,7 +402,7 @@ struct ServerDetailView: View {
                         }
                     }
                     .padding(10)
-                    .background(AppTheme.surfaceSecondary)
+                    .background(theme.surfaceSecondary)
                     .clipShape(RoundedRectangle(cornerRadius: 8))
                 }
             }
@@ -411,24 +412,24 @@ struct ServerDetailView: View {
     private func diskIOStat(_ title: String, readVal: String, writeVal: String, readRate: Double, writeRate: Double) -> some View {
         VStack(alignment: .leading, spacing: 2) {
             Text(title)
-                .font(.system(size: AppTheme.scaled(9), weight: .medium))
-                .foregroundStyle(AppTheme.textTertiary)
+                .font(.system(size: theme.scaled(9), weight: .medium))
+                .foregroundStyle(theme.textTertiary)
                 .lineLimit(1)
             HStack(spacing: 12) {
                 HStack(spacing: 4) {
                     Text("R")
-                        .foregroundStyle(AppTheme.activityReadColor(readRate))
+                        .foregroundStyle(theme.activityReadColor(readRate))
                     Text(readVal)
-                        .foregroundStyle(readRate > 0 ? AppTheme.textPrimary : AppTheme.textSecondary)
+                        .foregroundStyle(readRate > 0 ? theme.textPrimary : theme.textSecondary)
                 }
                 HStack(spacing: 4) {
                     Text("W")
-                        .foregroundStyle(AppTheme.activityWriteColor(writeRate))
+                        .foregroundStyle(theme.activityWriteColor(writeRate))
                     Text(writeVal)
-                        .foregroundStyle(writeRate > 0 ? AppTheme.textPrimary : AppTheme.textSecondary)
+                        .foregroundStyle(writeRate > 0 ? theme.textPrimary : theme.textSecondary)
                 }
             }
-            .font(.system(size: AppTheme.scaled(11), design: .monospaced))
+            .font(.system(size: theme.scaled(11), design: .monospaced))
         }
     }
 }
@@ -437,14 +438,15 @@ struct ServerDetailView: View {
 
 struct PerCoreGridView: View {
     let cores: [CPUMetrics.CoreMetrics]
+    @Environment(ThemeManager.self) private var theme
 
     var body: some View {
         let columns = Array(repeating: GridItem(.flexible(), spacing: 2), count: min(cores.count, 8))
         LazyVGrid(columns: columns, spacing: 2) {
             ForEach(cores) { core in
                 RoundedRectangle(cornerRadius: 2)
-                    .fill(AppTheme.utilizationColor(core.usage))
-                    .frame(height: AppTheme.scaled(10))
+                    .fill(theme.utilizationColor(core.usage))
+                    .frame(height: theme.scaled(10))
                     .animation(.easeInOut(duration: 0.3), value: core.usage)
             }
         }
@@ -456,17 +458,19 @@ struct PerCoreGridView: View {
 private struct HeaderStat: View {
     let label: String
     let value: String
-    var color: Color = AppTheme.textPrimary
+    var color: Color? = nil
+
+    @Environment(ThemeManager.self) private var theme
 
     var body: some View {
         VStack(spacing: 1) {
             Text(label)
-                .font(.system(size: AppTheme.scaled(9), weight: .medium))
-                .foregroundStyle(AppTheme.textTertiary)
+                .font(.system(size: theme.scaled(9), weight: .medium))
+                .foregroundStyle(theme.textTertiary)
                 .lineLimit(1)
             Text(value)
-                .font(.system(size: AppTheme.scaled(13), weight: .semibold))
-                .foregroundStyle(color)
+                .font(.system(size: theme.scaled(13), weight: .semibold))
+                .foregroundStyle(color ?? theme.textPrimary)
                 .lineLimit(1)
         }
         .fixedSize(horizontal: true, vertical: false)
@@ -478,30 +482,32 @@ struct PanelContainer<Content: View>: View {
     var badge: String = ""
     @ViewBuilder let content: () -> Content
 
+    @Environment(ThemeManager.self) private var theme
+
     var body: some View {
         VStack(alignment: .leading, spacing: 10) {
             HStack {
                 Text(title)
-                    .font(.system(size: AppTheme.scaled(13), weight: .semibold))
-                    .foregroundStyle(AppTheme.textPrimary)
+                    .font(.system(size: theme.scaled(13), weight: .semibold))
+                    .foregroundStyle(theme.textPrimary)
                     .lineLimit(1)
                     .fixedSize(horizontal: true, vertical: false)
                 Spacer()
                 if !badge.isEmpty {
                     Text(badge)
-                        .font(.system(size: AppTheme.scaled(11), weight: .medium))
-                        .foregroundStyle(AppTheme.textMuted)
+                        .font(.system(size: theme.scaled(11), weight: .medium))
+                        .foregroundStyle(theme.textMuted)
                 }
             }
 
             content()
         }
         .padding(14)
-        .background(AppTheme.surfacePrimary)
-        .clipShape(RoundedRectangle(cornerRadius: AppTheme.cornerRadius))
+        .background(theme.surfacePrimary)
+        .clipShape(RoundedRectangle(cornerRadius: ThemeManager.cornerRadius))
         .overlay(
-            RoundedRectangle(cornerRadius: AppTheme.cornerRadius)
-                .stroke(AppTheme.border, lineWidth: 1)
+            RoundedRectangle(cornerRadius: ThemeManager.cornerRadius)
+                .stroke(theme.border, lineWidth: 1)
         )
     }
 }
@@ -512,6 +518,7 @@ struct ProcessTableView: View {
     let server: Server
     @Environment(MetricsEngine.self) private var metricsEngine
     @Environment(LocalizationManager.self) private var loc
+    @Environment(ThemeManager.self) private var theme
     @State private var processes: [RemoteProcess] = []
     @State private var sortBy: SortKey = .cpu
 
@@ -537,7 +544,7 @@ struct ProcessTableView: View {
                         Text(loc["detail.process.cpu"])
                         if sortBy == .cpu {
                             Image(systemName: "chevron.down")
-                                .font(.system(size: AppTheme.scaled(8)))
+                                .font(.system(size: theme.scaled(8)))
                         }
                     }
                 }
@@ -550,7 +557,7 @@ struct ProcessTableView: View {
                         Text(loc["detail.process.memory"])
                         if sortBy == .mem {
                             Image(systemName: "chevron.down")
-                                .font(.system(size: AppTheme.scaled(8)))
+                                .font(.system(size: theme.scaled(8)))
                         }
                     }
                 }
@@ -558,12 +565,12 @@ struct ProcessTableView: View {
                 .handCursorOnHover()
                 .frame(width: 60, alignment: .trailing)
             }
-            .font(.system(size: AppTheme.scaled(11), weight: .semibold))
-            .foregroundStyle(AppTheme.textTertiary)
+            .font(.system(size: theme.scaled(11), weight: .semibold))
+            .foregroundStyle(theme.textTertiary)
             .padding(.horizontal, 8)
             .padding(.vertical, 8)
 
-            Divider().overlay(AppTheme.border)
+            Divider().overlay(theme.border)
 
             ScrollView {
                 LazyVStack(spacing: 0) {
@@ -573,21 +580,21 @@ struct ProcessTableView: View {
                                 .lineLimit(1)
                                 .truncationMode(.middle)
                                 .frame(maxWidth: .infinity, alignment: .leading)
-                                .foregroundStyle(AppTheme.textSecondary)
+                                .foregroundStyle(theme.textSecondary)
 
                             Text(String(format: "%.0f%%", proc.cpuPercent))
                                 .frame(width: 60, alignment: .trailing)
-                                .foregroundStyle(proc.cpuPercent > 50 ? AppTheme.statusOffline : AppTheme.textMuted)
+                                .foregroundStyle(proc.cpuPercent > 50 ? theme.statusOffline : theme.textMuted)
 
                             Text(ByteFormatter.format(proc.rss * 1024))
                                 .frame(width: 60, alignment: .trailing)
-                                .foregroundStyle(AppTheme.textMuted)
+                                .foregroundStyle(theme.textMuted)
                         }
-                        .font(.system(size: AppTheme.scaled(12), design: .monospaced))
+                        .font(.system(size: theme.scaled(12), design: .monospaced))
                         .padding(.horizontal, 8)
                         .padding(.vertical, 4)
 
-                        Divider().overlay(AppTheme.border.opacity(0.3))
+                        Divider().overlay(theme.border.opacity(0.3))
                     }
                 }
             }
