@@ -1,7 +1,7 @@
 import Foundation
 
 enum AppVersion {
-    static let current = "1.0.2"
+    static let current = "1.0.3"
     static let copyright = "© 2025 HalloWelt42"
 
     /// Formatted display string, e.g. "ServerPulse v1.0.1"

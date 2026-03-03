@@ -158,6 +158,10 @@
   "add_server.test.testing": "テスト中...",
   "add_server.test.button": "接続テスト",
 
+  "edit_server.title": "サーバーを編集",
+  "edit_server.password_hint": "変更なし",
+  "edit_server.key_stored": "鍵を保存済み",
+
   "snippets.title": "スニペット",
   "snippets.search": "スニペットを検索...",
   "snippets.button.category": "カテゴリ",

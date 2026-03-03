@@ -10,8 +10,19 @@ struct ServersDashboardView: View {
     @Query(sort: \Server.sortOrder) private var servers: [Server]
     @AppStorage("autoConnectOnLaunch") private var autoConnectOnLaunch = true
     @State private var searchText = ""
-    @State private var showAddServer = false
+    @State private var activeSheet: ServerSheetType?
     @State private var navigationPath = NavigationPath()
+
+    enum ServerSheetType: Identifiable {
+        case add
+        case edit(Server)
+        var id: String {
+            switch self {
+            case .add: return "add"
+            case .edit(let s): return "edit-\(s.id)"
+            }
+        }
+    }
 
     private var filteredServers: [Server] {
         if searchText.isEmpty { return servers }
@@ -54,7 +65,7 @@ struct ServersDashboardView: View {
                         }
 
                         Button {
-                            showAddServer = true
+                            activeSheet = .add
                         } label: {
                             Image(systemName: "plus")
                         }
@@ -86,6 +97,7 @@ struct ServersDashboardView: View {
                                                 metrics: metricsEngine.serverMetrics[server.id],
                                                 onToggleConnection: { toggleConnection(server) },
                                                 onTap: { openDetail(server) },
+                                                onEdit: { activeSheet = .edit(server) },
                                                 onDelete: { deleteServer(server) }
                                             )
                                             .frame(maxWidth: .infinity)
@@ -106,8 +118,13 @@ struct ServersDashboardView: View {
                 }
             }
             .background(theme.background)
-            .sheet(isPresented: $showAddServer) {
-                AddServerSheet()
+            .sheet(item: $activeSheet) { sheet in
+                switch sheet {
+                case .add:
+                    AddServerSheet()
+                case .edit(let server):
+                    EditServerSheet(server: server)
+                }
             }
             .navigationDestination(for: UUID.self) { serverId in
                 if let server = servers.first(where: { $0.id == serverId }) {
@@ -133,7 +150,7 @@ struct ServersDashboardView: View {
                 .font(.system(size: theme.scaled(16), weight: .semibold))
                 .foregroundStyle(theme.textMuted)
             Button(loc["dashboard.empty.add"]) {
-                showAddServer = true
+                activeSheet = .add
             }
             .buttonStyle(.borderedProminent)
             .tint(theme.buttonPrimary)
@@ -189,6 +206,7 @@ struct UnifiedServerCard: View {
     let metrics: ServerMetrics?
     let onToggleConnection: () -> Void
     let onTap: () -> Void
+    let onEdit: () -> Void
     let onDelete: () -> Void
 
     @Environment(LocalizationManager.self) private var loc
@@ -197,6 +215,7 @@ struct UnifiedServerCard: View {
     @State private var isHovering = false
     @State private var isHoveringDetails = false
     @State private var isHoveringConnect = false
+    @State private var isHoveringEdit = false
     @State private var isHoveringDelete = false
     @State private var showDeleteConfirm = false
 
@@ -256,16 +275,30 @@ struct UnifiedServerCard: View {
                     .handCursorOnHover()
                 }
 
+                // Edit button — neutral, accent on hover
+                Button { onEdit() } label: {
+                    Image(systemName: "pencil")
+                        .font(.system(size: theme.scaled(13), weight: .medium))
+                        .foregroundStyle(isHoveringEdit ? theme.buttonPrimary : theme.textMuted)
+                        .frame(width: 28, height: 28)
+                        .background(isHoveringEdit ? theme.buttonPrimary.opacity(0.15) : Color.clear)
+                        .clipShape(RoundedRectangle(cornerRadius: 6))
+                }
+                .buttonStyle(.plain)
+                .opacity(isHovering ? 1 : 0)
+                .onHover { isHoveringEdit = $0 }
+                .handCursorOnHover()
+
                 // Delete button — neutral, danger on hover
                 Button {
                     showDeleteConfirm = true
                 } label: {
                     Image(systemName: "trash")
-                        .font(.system(size: theme.scaled(11)))
-                        .foregroundStyle(isHoveringDelete ? theme.buttonDanger : theme.textTertiary)
-                        .padding(4)
+                        .font(.system(size: theme.scaled(13), weight: .medium))
+                        .foregroundStyle(isHoveringDelete ? theme.buttonDanger : theme.textMuted)
+                        .frame(width: 28, height: 28)
                         .background(isHoveringDelete ? theme.buttonDangerBg : Color.clear)
-                        .clipShape(RoundedRectangle(cornerRadius: 4))
+                        .clipShape(RoundedRectangle(cornerRadius: 6))
                 }
                 .buttonStyle(.plain)
                 .opacity(isHovering ? 1 : 0)

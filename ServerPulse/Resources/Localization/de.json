@@ -158,6 +158,10 @@
   "add_server.test.testing": "Teste...",
   "add_server.test.button": "Verbindung testen",
 
+  "edit_server.title": "Server bearbeiten",
+  "edit_server.password_hint": "Unverändert",
+  "edit_server.key_stored": "Schlüssel gespeichert",
+
   "snippets.title": "Befehle",
   "snippets.search": "Befehle suchen...",
   "snippets.button.category": "Kategorie",

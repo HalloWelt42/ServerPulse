@@ -7,7 +7,7 @@ set -euo pipefail
 MODE="${1:---release}"
 APP_NAME="ServerPulse"
 BUNDLE_ID="com.serverpulse.app"
-VERSION="1.0.2"
+VERSION="1.0.3"
 BUILD_NUMBER="1"
 OUTPUT_DIR="$(pwd)/dist"
 APP_PATH="${OUTPUT_DIR}/${APP_NAME}.app"

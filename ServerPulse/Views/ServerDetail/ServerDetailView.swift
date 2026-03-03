@@ -9,6 +9,7 @@ struct ServerDetailView: View {
     @Environment(LocalizationManager.self) private var loc
     @Environment(ThemeManager.self) private var theme
     @Environment(\.dismiss) private var dismiss
+    @State private var showEditSheet = false
 
     private var metrics: ServerMetrics? {
         metricsEngine.serverMetrics[server.id]
@@ -47,6 +48,9 @@ struct ServerDetailView: View {
         }
         .background(theme.background)
         .navigationBarBackButtonHidden(true)
+        .sheet(isPresented: $showEditSheet) {
+            EditServerSheet(server: server)
+        }
     }
 
     // MARK: - Header
@@ -103,6 +107,14 @@ struct ServerDetailView: View {
             }
 
             HStack(spacing: 8) {
+                Button {
+                    showEditSheet = true
+                } label: {
+                    Image(systemName: "pencil")
+                }
+                .buttonStyle(.bordered)
+                .handCursorOnHover()
+
                 Button {
                     Task {
                         try? await terminalManager.openSession(for: server, connectionManager: connectionManager)

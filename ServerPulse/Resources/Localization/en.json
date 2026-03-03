@@ -158,6 +158,10 @@
   "add_server.test.testing": "Testing...",
   "add_server.test.button": "Test Connection",
 
+  "edit_server.title": "Edit Server",
+  "edit_server.password_hint": "Unchanged",
+  "edit_server.key_stored": "Key stored",
+
   "snippets.title": "Snippets",
   "snippets.search": "Search snippets...",
   "snippets.button.category": "Category",

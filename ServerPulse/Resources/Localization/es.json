@@ -158,6 +158,10 @@
   "add_server.test.testing": "Probando...",
   "add_server.test.button": "Probar conexión",
 
+  "edit_server.title": "Editar servidor",
+  "edit_server.password_hint": "Sin cambios",
+  "edit_server.key_stored": "Clave guardada",
+
   "snippets.title": "Fragmentos",
   "snippets.search": "Buscar fragmentos...",
   "snippets.button.category": "Categoría",

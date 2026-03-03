@@ -158,6 +158,10 @@
   "add_server.test.testing": "Тестирование...",
   "add_server.test.button": "Проверить подключение",
 
+  "edit_server.title": "Редактировать сервер",
+  "edit_server.password_hint": "Без изменений",
+  "edit_server.key_stored": "Ключ сохранён",
+
   "snippets.title": "Сниппеты",
   "snippets.search": "Поиск сниппетов...",
   "snippets.button.category": "Категория",

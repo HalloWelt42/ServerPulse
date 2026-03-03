@@ -158,6 +158,10 @@
   "add_server.test.testing": "Test en cours...",
   "add_server.test.button": "Tester la connexion",
 
+  "edit_server.title": "Modifier le serveur",
+  "edit_server.password_hint": "Inchangé",
+  "edit_server.key_stored": "Clé enregistrée",
+
   "snippets.title": "Extraits",
   "snippets.search": "Rechercher extraits...",
   "snippets.button.category": "Catégorie",

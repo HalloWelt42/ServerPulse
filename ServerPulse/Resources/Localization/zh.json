@@ -158,6 +158,10 @@
   "add_server.test.testing": "测试中...",
   "add_server.test.button": "测试连接",
 
+  "edit_server.title": "编辑服务器",
+  "edit_server.password_hint": "未更改",
+  "edit_server.key_stored": "密钥已存储",
+
   "snippets.title": "代码片段",
   "snippets.search": "搜索片段...",
   "snippets.button.category": "分类",
