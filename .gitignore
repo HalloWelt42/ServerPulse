@@ -102,4 +102,3 @@ Carthage/Checkouts/
 *.key
 *.pem
 *.p12
-/ServerPulseTests/

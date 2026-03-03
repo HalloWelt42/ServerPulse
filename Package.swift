@@ -24,7 +24,8 @@ let package = Package(
             path: "ServerPulse",
             resources: [
                 .copy("Resources/Localization"),
-                .copy("Resources/QRCodes")
+                .copy("Resources/QRCodes"),
+                .copy("Resources/AppIcon.icns")
             ]
         ),
         .testTarget(

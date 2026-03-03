@@ -64,4 +64,10 @@ enum TimeFormatter {
         }
     }
 
+    static func formatDuration(_ seconds: TimeInterval) -> String {
+        let h = Int(seconds) / 3600
+        let m = (Int(seconds) % 3600) / 60
+        let s = Int(seconds) % 60
+        return String(format: "%02d:%02d:%02d", h, m, s)
+    }
 }
