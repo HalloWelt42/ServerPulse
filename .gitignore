@@ -1,0 +1,105 @@
+# Xcode
+*.xcodeproj/
+*.xcworkspace/
+xcuserdata/
+*.xcscheme
+*.xcuserstate
+*.xccheckout
+*.xcscmblueprint
+DerivedData/
+build/
+*.pbxuser
+!default.pbxuser
+*.mode1v3
+!default.mode1v3
+*.mode2v3
+!default.mode2v3
+*.perspectivev3
+!default.perspectivev3
+*.hmap
+*.ipa
+*.dSYM.zip
+*.dSYM
+
+# Swift Package Manager
+.build/
+.swiftpm/
+Package.resolved
+Packages/
+
+# JetBrains (AppCode, IntelliJ, etc.)
+.idea/
+*.iml
+*.iws
+*.ipr
+out/
+.idea_modules/
+
+# VS Code
+.vscode/
+*.code-workspace
+
+# Sublime Text
+*.sublime-project
+*.sublime-workspace
+
+# Nova
+.nova/
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+.Spotlight-V100
+.Trashes
+Icon?
+.fseventsd
+
+# Build output
+dist/
+
+# Claude Code
+.claude/
+
+# Temporary files
+*.swp
+*.swo
+*~
+*.tmp
+*.bak
+*.orig
+
+# Crash logs
+*.crash
+*.ips
+
+# Playground
+timeline.xctimeline
+playground.xcworkspace
+
+# Provisioning
+*.mobileprovision
+*.provisionprofile
+
+# Fastlane
+fastlane/report.xml
+fastlane/Preview.html
+fastlane/screenshots
+fastlane/test_output
+
+# CocoaPods (not used but good to have)
+Pods/
+Podfile.lock
+
+# Carthage (not used but good to have)
+Carthage/Build/
+Carthage/Checkouts/
+
+# Secrets / Environment
+.env
+.env.*
+*.key
+*.pem
+*.p12
+/ServerPulseTests/
